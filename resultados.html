@@ -1,52 +1,92 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Tu equipo ideal — Shoe & Gear Coach</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-*,*::before,*::after{box-sizing:border-box;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;color:#1a1a1a;margin:0;padding:20px;}
-.container{max-width:640px;margin:0 auto;}
-h1{font-size:1.8rem;margin:0 0 6px;}
-.subtitle{color:#666;font-size:.9rem;margin-bottom:24px;}
-.section{margin-top:32px;}
-.section-title{font-size:1rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#444;margin-bottom:12px;}
-.table{width:100%;border-collapse:collapse;}
-.table th,.table td{padding:12px;border:1px solid #e0e0e0;text-align:left;vertical-align:top;}
-.table th{background:#e8f4e8;color:#2d6a4f;font-weight:700;}
-.tag-recommended{display:inline-block;background:#cde9c4;color:#198754;border-radius:4px;padding:2px 8px;font-size:.75rem;vertical-align:top;margin-left:8px;}
-.actions{display:flex;gap:12px;margin-top:24px;}
-.btn{flex:1;padding:14px;border:none;border-radius:10px;font-size:.95rem;cursor:pointer;font-weight:600;}
-.btn-primary{background:#2d6a4f;color:#fff;}
-.btn-secondary{background:#fff;color:#2d6a4f;border:1.5px solid #2d6a4f;}
-.no-data{text-align:center;padding:40px 20px;color:#888;}
-.microcopy{color:#555;font-size:12px;text-align:center;margin-top:8px;}
-@media(min-width:600px){
-    .table th,.table td{padding:16px;}
-    h1{font-size:2.3rem;}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tu equipo ideal — Shoe & Gear Coach</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        h1 { font-size: 1.4rem; margin-bottom: 4px; }
+        .subtitle { color: #666; font-size: 0.85rem; margin-bottom: 8px; }
+        .context-note { background: #e8f4e8; border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; color: #2d6a4f; margin-bottom: 24px; }
+        .section-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #888; margin: 24px 0 12px; }
+        .shoe-card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid #e0e0e0; position: relative; }
+        .shoe-card.top { border-color: #2d6a4f; border-width: 2px; }
+        .badge { position: absolute; top: 12px; right: 12px; background: #2d6a4f; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; }
+        .shoe-name { font-size: 1.05rem; font-weight: 700; margin-bottom: 2px; }
+        .shoe-brand { font-size: 0.75rem; color: #999; margin-bottom: 6px; }
+        .shoe-price { font-size: 1rem; font-weight: 700; color: #2d6a4f; margin-bottom: 8px; }
+        .shoe-desc { font-size: 0.85rem; color: #555; margin-bottom: 8px; line-height: 1.5; }
+        .shoe-why { font-size: 0.82rem; color: #333; background: #f9f9f7; border-radius: 6px; padding: 8px 10px; line-height: 1.5; }
+        .shoe-why strong { color: #2d6a4f; }
+        .shoe-tag { display: inline-block; background: #f0f0f0; color: #666; border-radius: 4px; padding: 2px 8px; font-size: 0.72rem; margin-top: 8px; }
+        .gear-list { background: #fff; border-radius: 12px; padding: 16px; border: 1px solid #e0e0e0; }
+        .gear-list ul { padding-left: 18px; }
+        .gear-list li { padding: 4px 0; font-size: 0.875rem; color: #333; }
+        .actions { display: flex; gap: 12px; margin-top: 24px; }
+        .btn { flex: 1; padding: 14px; border: none; border-radius: 10px; font-size: 0.9rem; cursor: pointer; font-weight: 600; }
+        .btn-primary { background: #2d6a4f; color: #fff; }
+        .btn-back { background: #fff; color: #2d6a4f; border: 1.5px solid #2d6a4f; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+        .no-data { text-align: center; padding: 40px 20px; color: #888; }
+    </style>
 </head>
 <body>
 <div class="container"><div id="app"></div></div>
 <script>
-const data=JSON.parse(localStorage.getItem('trailResult'));
-if(!data){document.getElementById('app').innerHTML='<div class="no-data"><p>No hay resultados. <a href="index.html">Volver al cuestionario</a></p></div>';return;}
-const {zapatos, equipo, objetivo, terreno, presupuesto}=data;
-const objetivos={'5K':'5K','10K':'10K','21K':'Media Maratón','ultra':'Ultra 50K+'};
-const app=document.getElementById('app');
-app.innerHTML=`<h1>Tu equipo ideal para ${objetivos[objetivo]||objetivo}</h1>
-<p class="subtitle">Terreno: ${terreno} · Presupuesto: ${presupuesto}</p>
-<div class="section"><div class="section-title">Calzado recomendado</div>
-<table class="table"><thead><tr><th>Zapato</th><th>Marca</th><th>Precio</th><th>Descripción</th></tr></thead><tbody>
-${zapatos.map((z,i)=>`<tr><td>${z.nombre}${i===0?' <span class="tag-recommended">RECOMENDADO</span>':''}</td><td>${z.marca}</td><td>${z.precio}</td><td>${z.descripcion}</td></tr>`).join('')}
-</tbody></table>
-</div>
-<div class="section"><div class="section-title">Equipo prioritario</div><div class="gear-list"><ul>${equipo.map(e=>`<li>${e}</li>`).join('')}</ul></div></div>
-<div class="microcopy">Haz clic en "Guardar mi lista" para copiar la lista completa al portapapeles.</div>
-<div class="actions"><button class="btn btn-primary" onclick="copyList()">Guardar mi lista</button><a href="index.html"><button class="btn btn-secondary">Volver</button></a></div>`;
-function copyList(){let txt='MI LISTA DE EQUIPO — Shoe & Gear Coach\n=====================================\nObjetivo: '+objetivo+'\nTerreno: '+terreno+'\nPresupuesto: '+presupuesto+'\n\nCALZADO RECOMENDADO:\n'+zapatos.map(z=>'• '+z.nombre+' ('+z.marca+') — '+z.precio).join('\n')+'\n\nEQUIPO PRIORITARIO:\n'+equipo.map(e=>'• '+e).join('\n');navigator.clipboard.writeText(txt).then(()=>alert('Lista copiada al portapapeles!'));}
+const data = JSON.parse(localStorage.getItem('trailResult') || 'null');
+
+if (!data) {
+    document.getElementById('app').innerHTML = '<div class="no-data"><p>Sin resultados. <a href="index.html">Volver al cuestionario</a></p></div>';
+} else {
+    const labels = { '5K':'5K', '10K':'10K', '21K':'Media Maratón', 'ultra':'Ultra 50K+',
+                     'montaña':'Montaña', 'bosque':'Bosque', 'roca':'Roca', 'mixto':'Mixto' };
+    const pLabel = { 'menos2000':'menos de $2,000', '2000-4000':'$2,000–$4,000', 'mas4000':'más de $4,000' };
+
+    function whyCard(z, i, objetivo, terreno) {
+        if (i === 0) return `<strong>Primera opción:</strong> mejor relación terreno–presupuesto para tu perfil. Ideal si tu prioridad es tracción en ${labels[terreno]||terreno}.`;
+        if (i === 1) return `<strong>Alternativa:</strong> más amortiguación para distancias largas${objetivo==='ultra'?' — crítico en ultras de 50K+':''}.`;
+        return `<strong>Tercera opción:</strong> precio más accesible si el presupuesto es la restricción principal.`;
+    }
+
+    const zapatosHTML = data.zapatos.map((z, i) => `
+        <div class="shoe-card${i===0?' top':''}">
+            ${i===0?'<span class="badge">Recomendado</span>':''}
+            <div class="shoe-name">${z.nombre}</div>
+            <div class="shoe-brand">${z.marca}</div>
+            <div class="shoe-price">${z.precio}</div>
+            <div class="shoe-desc">${z.descripcion}</div>
+            <div class="shoe-why">${whyCard(z, i, data.objetivo, data.terreno)}</div>
+            <span class="shoe-tag">${z.terreno}</span>
+        </div>`).join('');
+
+    const equipoHTML = data.equipo.length
+        ? '<ul>' + data.equipo.map(e => `<li>${e}</li>`).join('') + '</ul>'
+        : '<p style="color:#aaa;font-size:.85rem">Sin equipo adicional recomendado para este perfil.</p>';
+
+    document.getElementById('app').innerHTML = `
+        <h1>Tu equipo para ${labels[data.objetivo]||data.objetivo}</h1>
+        <p class="subtitle">${labels[data.terreno]||data.terreno} · ${pLabel[data.presupuesto]||data.presupuesto}</p>
+        <p class="context-note">Basado en tu perfil, priorizamos tracción, durabilidad y precio. Los tres zapatos abajo cubren distintas prioridades — elige el que más se alinea con tu situación.</p>
+        <div class="section-title">Calzado recomendado</div>
+        ${zapatosHTML}
+        <div class="section-title">Equipo prioritario</div>
+        <div class="gear-list">${equipoHTML}</div>
+        <div class="actions">
+            <button class="btn btn-primary" onclick="guardar()">Guardar mi lista</button>
+            <a href="index.html" class="btn btn-back">Volver</a>
+        </div>`;
+}
+
+function guardar() {
+    const data = JSON.parse(localStorage.getItem('trailResult') || 'null');
+    if (!data) return;
+    const txt = ['MI LISTA — Shoe & Gear Coach','='.repeat(36),
+        'Objetivo: '+data.objetivo, 'Terreno: '+data.terreno, 'Presupuesto: '+data.presupuesto,'',
+        'CALZADO:', ...data.zapatos.map(z=>'• '+z.nombre+' ('+z.marca+') — '+z.precio),'',
+        'EQUIPO:', ...data.equipo.map(e=>'• '+e)].join('\n');
+    navigator.clipboard.writeText(txt).then(()=>alert('Lista copiada'));
 }
 </script>
 </body>
