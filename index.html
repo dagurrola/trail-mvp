@@ -74,7 +74,7 @@ const sub=document.getElementById('objectiveSub');sub.innerHTML='';sub.classList
 if(this.value==='entrenamiento'){sub.innerHTML='<option value="">Seleccionar</option>'+'<option value="tecnica">Mejorar técnica</option>'+'<option value="distancia">Aumentar distancia</option>'+'<option value="velocidad">Velocidad</option>';sub.classList.remove('hidden');sub.setAttribute('required','');}
 if(this.value==='competencia'){sub.innerHTML='<option value="">Seleccionar</option>'+'<option value="5K">5 K</option>'+'<option value="10K">10 K</option>'+'<option value="21K">21 K</option>'+'<option value="51Kplus">51 K+</option>';sub.classList.remove('hidden');sub.setAttribute('required','');}
 });
-function recomendar(){const terreno=document.getElementById('terrain').value;const presupuesto=document.getElementById('budget').value;const level=document.getElementById('level').value;const objMaj=document.getElementById('objective').value;const objSub=document.getElementById('objectiveSub').value;let objetivo=objSub||objMaj;if(!level||!terrain||!presupuesto||!objetivo){alert('Por favor completa todos los campos.');return}if(!objetivo){alert('Completa el campo de objetivo.');return}
+function recomendar(){const terreno=document.getElementById('terrain').value;const presupuesto=document.getElementById('budget').value;const level=document.getElementById('level').value;const objMaj=document.getElementById('objective').value;const objSub=document.getElementById('objectiveSub').value;let objetivo=objSub||objMaj;if(!level||!terreno||!presupuesto||!objetivo){alert('Por favor completa todos los campos.');return}if(!objetivo){alert('Completa el campo de objetivo.');return}
 const presupuestoMax={'menos2000':2000,'2000-4000':4000,'mas4000':99999};const maxMXN=presupuestoMax[presupuesto]||4000;
 const catalogo=[
 {nombre:'Salomon Speedcross 6',marca:'Salomon',precio:'$2,800 MXN',precioNum:2800,descripcion:'Suela aggressive con taco profundo, ideal para terreno blando y mixto. Excelente tracción y soporte lateral.',terrenoKeys:['montaña','mixto','bosque']},
@@ -84,21 +84,20 @@ const catalogo=[
 {nombre:'Salomon Ultra Glide 2',marca:'Salomon',precio:'$3,100 MXN',precioNum:3100,descripcion:'Suela agresiva con tacos cortos, ideal para rutas de trail ligero y ascensos cortos.',terrenoKeys:['bosque','traje']},
 {nombre:'New Balance Fresh Foam Trail',marca:'New Balance',precio:'$2,500 MXN',precioNum:2500,descripcion:'Amplio confort con amortiguación y suela versátil, apto para distancias largas y terrenos mixtos.',terrenoKeys:['montaña','mixto','roca','bosque']}
 ];
-let candidatos=catalogo.filter(z=>z.terrenoKeys.includes(terrain)&&z.precioNum<=maxMXN);
-if(candidatos.length===0)candidatos=catalogo.filter(z=>z.terrenoKeys.includes(terrain));
+let candidatos=catalogo.filter(z=>z.terrenoKeys.includes(terreno)&&z.precioNum<=maxMXN);
+if(candidatos.length===0)candidatos=catalogo.filter(z=>z.terrenoKeys.includes(terreno));
 if(candidatos.length===0)candidatos=[...catalogo];
-candidatos.sort((a,b)=>{const aMatch=a.terrenoKeys[0]===terrain?-1:0;const bMatch=b.terrenoKeys[0]===terrain?-1:0;return aMatch-bMatch||a.precioNum-b.precioNum;});
+candidatos.sort((a,b)=>{const aMatch=a.terrenoKeys[0]===terreno?-1:0;const bMatch=b.terrenoKeys[0]===terreno?-1:0;return aMatch-bMatch||a.precioNum-b.precioNum;});
 const zapatos=candidatos.slice(0,3);
 const equipo=['Medias técnicas de trail (anti-ampolla)','Hidratación: botella suave 500ml mínimo'];
 if(['21K','51Kplus'].includes(objetivo)){equipo.push('Chaleco de hidratación (2L+)', 'Geles energéticos / nutrición de carrera');}
 if(objetivo==='51Kplus'){equipo.push('Bastones de trail (carbono o aluminio)','Kit de emergencia (manta, silbato, linterna)','Gorra y protector solar');}
 if(terrain==='roca'){equipo.push('Polainas anti-piedra');}
 const presupuestoLabel={'menos2000':'Menos de $2,000','2000-4000':'$2,000–$4,000','mas4000':'Más de $4,000'};
-const result={zapatos:zapatos.map(z=>({nombre:z.nombre,marca:z.marca,precio:z.precio,descripcion:z.descripcion})),equipo,objetivo,terrain,presupuesto:presupuestoLabel[presupuesto]||presupuesto};
+const result={zapatos:zapatos.map(z=>({nombre:z.nombre,marca:z.marca,precio:z.precio,descripcion:z.descripcion})),equipo,objetivo,terreno,presupuesto:presupuestoLabel[presupuesto]||presupuesto};
 localStorage.setItem('trailResult',JSON.stringify(result));
 window.location.href='resultados.html';
 }
 </script>
-<script src="recomendacion.js"></script>
 </body>
 </html>
