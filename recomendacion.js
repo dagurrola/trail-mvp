@@ -1,51 +1,112 @@
-const form = document.querySelector('form');
-  const recomendaciones = [];
-  
-  // Datos de calzado con precios en MXN
-  const shoes = [
-    {nombre: 'Salomon Speedcross 6', precio: 2800, terreno: 'mixto/montaña', caracteristicas: 'soporte medio, agarre en roca'},
-    {nombre: 'Hoka Speedgoat 5', precio: 3500, terreno: 'distancia larga', caracteristicas: 'cushioning alto, amortiguación'},
-    {nombre: 'Brooks Cascadia 17', precio: 2200, terreno: 'mixto', caracteristicas: 'soporte medio, amortiguación'},
-    {nombre: 'Inov-8 Trailfly G 270', precio: 3200, terreno: 'roca', caracteristicas: 'agarre extremo, tracción'}
-  ];
-  
-  // Datos de equipo prioritario
-  const equipoPrioritario = [
-    {nombre: 'Hidratación', tipo: 'botella + filtro', descripcion: 'Mínimo 1L capacidad, filtro para agua de río'},
-    {nombre: 'Medias', tipo: 'mangas largas', descripcion: 'Transpirables, con refuerzo en talones'},
-    {nombre: 'Poles', tipo: 'aluminio 40cm', descripcion: 'Para ultra de 30km+', disponible: true}
-  ];
-  
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Obtener valores del formulario
-    const terreno = document.getElementById('terreno').value;
-    const presupuesto = parseInt(document.getElementById('presupuesto').value);
-    const objetivo = document.getElementById('objetivo').value;
-    
-    // Lógica de recomendación
-    const recomendacionesFiltradas = shoes.filter(shoe => {
-      return (shoe.terreno.includes(terreno) || 
-              shoe.caracteristicas.includes(terreno)) && 
-             shoe.precio <= presupuesto;
-    });
-    
-    // Seleccionar top 2 recomendaciones
-    recomendacionesFiltradas.sort((a, b) => a.precio - b.precio);
-    recomendacionesFiltradas.splice(2);
-    
-    // Generar lista de equipo prioritario
-    const equipo = [...equipoPrioritario];
-    if (objetivo === 'ultra') {
-      equipo.push({nombre: 'Poles', tipo: 'aluminio 40cm', descripcion: 'Para ultra de 30km+'});
+function recomendar() {
+    const terreno = document.getElementById('terrain').value;
+    const presupuesto = document.getElementById('budget').value;
+    const objetivo = document.getElementById('objective').value;
+    const nivel = document.getElementById('level').value;
+    const talla = document.getElementById('shoeSize').value;
+
+    if (!terreno || !presupuesto || !objetivo || !nivel || !talla) {
+        alert('Por favor completa todos los campos.');
+        return;
     }
-    
-    // Guardar datos en localStorage
-    localStorage.setItem('recomendaciones', JSON.stringify(recomendacionesFiltradas));
-    localStorage.setItem('equipoPrioritario', JSON.stringify(equipo));
-    
-    // Redirigir a resultados
+
+    // Map budget strings to numeric max for filtering
+    const presupuestoMax = { 'menos2000': 2000, '2000-4000': 4000, 'mas4000': 99999 };
+    const maxMXN = presupuestoMax[presupuesto] || 4000;
+
+    const catalogo = [
+        {
+            nombre: 'Salomon Speedcross 6',
+            marca: 'Salomon',
+            precio: '$2,800 MXN',
+            precioNum: 2800,
+            descripcion: 'Suela aggressive con taco profundo, ideal para terreno blando y mixto. Excelente tracción y soporte lateral.',
+            terreno: 'Montaña / Mixto',
+            terrenoKeys: ['montaña', 'mixto', 'bosque']
+        },
+        {
+            nombre: 'Hoka Speedgoat 5',
+            marca: 'Hoka',
+            precio: '$3,500 MXN',
+            precioNum: 3500,
+            descripcion: 'Máxima amortiguación para distancias largas. Ideal para ultras y corredores que priorizan comodidad sobre velocidad.',
+            terreno: 'Distancia larga / Todo terreno',
+            terrenoKeys: ['montaña', 'mixto', 'bosque', 'roca']
+        },
+        {
+            nombre: 'Brooks Cascadia 17',
+            marca: 'Brooks',
+            precio: '$2,200 MXN',
+            precioNum: 2200,
+            descripcion: 'Balance perfecto entre tracción y amortiguación. Versátil para principiantes e intermedios en terreno variado.',
+            terreno: 'Mixto / Bosque',
+            terrenoKeys: ['mixto', 'bosque', 'montaña']
+        },
+        {
+            nombre: 'Inov-8 Trailfly G 270',
+            marca: 'Inov-8',
+            precio: '$3,200 MXN',
+            precioNum: 3200,
+            descripcion: 'Suela de grafeno para agarre extremo en roca. Muy ligero, para corredores técnicos y roca seca.',
+            terreno: 'Roca / Técnico',
+            terrenoKeys: ['roca', 'mixto']
+        }
+    ];
+
+    // Filter by terrain and budget
+    let candidatos = catalogo.filter(z =>
+        z.terrenoKeys.includes(terreno) && z.precioNum <= maxMXN
+    );
+
+    // Fallback: if nothing in budget, pick cheapest that matches terrain
+    if (candidatos.length === 0) {
+        candidatos = catalogo.filter(z => z.terrenoKeys.includes(terreno));
+    }
+    // Fallback total
+    if (candidatos.length === 0) {
+        candidatos = [...catalogo];
+    }
+
+    // Sort by terrain match first, then price
+    candidatos.sort((a, b) => {
+        const aMatch = a.terrenoKeys[0] === terreno ? -1 : 0;
+        const bMatch = b.terrenoKeys[0] === terreno ? -1 : 0;
+        return aMatch - bMatch || a.precioNum - b.precioNum;
+    });
+
+    const zapatos = candidatos.slice(0, 2);
+
+    // Equipment list based on goal
+    const equipo = ['Medias técnicas de trail (anti-ampolla)', 'Hidratación: botella suave 500ml mínimo'];
+    if (objetivo === '21K' || objetivo === 'ultra') {
+        equipo.push('Chaleco de hidratación (2L+)');
+        equipo.push('Geles energéticos / nutrición de carrera');
+    }
+    if (objetivo === 'ultra') {
+        equipo.push('Bastones de trail (carbono o aluminio)');
+        equipo.push('Kit de emergencia (manta, silbato, linterna)');
+        equipo.push('Gorra y protector solar');
+    }
+    if (terreno === 'roca') {
+        equipo.push('Polainas anti-piedra');
+    }
+
+    const presupuestoLabel = { 'menos2000': 'Menos de $2,000', '2000-4000': '$2,000–$4,000', 'mas4000': 'Más de $4,000' };
+
+    const result = {
+        zapatos: zapatos.map(z => ({
+            nombre: z.nombre,
+            marca: z.marca,
+            precio: z.precio,
+            descripcion: z.descripcion,
+            terreno: z.terreno
+        })),
+        equipo,
+        objetivo,
+        terreno,
+        presupuesto: presupuestoLabel[presupuesto] || presupuesto
+    };
+
+    localStorage.setItem('trailResult', JSON.stringify(result));
     window.location.href = 'resultados.html';
-  });
-})();
+}
