@@ -69,12 +69,12 @@ button:hover{background-color:#218838}
 </form>
 </div>
 <script>
-document.getElementByID('objective').addEventListener('change', function(){
-const sub=document.getElementByID('objectiveSub');sub.innerHTML='';sub.classList.add('hidden');sub.removeAttribute('required');
+document.getElementById('objective').addEventListener('change', function(){
+const sub=document.getElementById('objectiveSub');sub.innerHTML='';sub.classList.add('hidden');sub.removeAttribute('required');
 if(this.value==='entrenamiento'){sub.innerHTML='<option value="">Seleccionar</option>'+'<option value="tecnica">Mejorar técnica</option>'+'<option value="distancia">Aumentar distancia</option>'+'<option value="velocidad">Velocidad</option>';sub.classList.remove('hidden');sub.setAttribute('required','');}
 if(this.value==='competencia'){sub.innerHTML='<option value="">Seleccionar</option>'+'<option value="5K">5 K</option>'+'<option value="10K">10 K</option>'+'<option value="21K">21 K</option>'+'<option value="51Kplus">51 K+</option>';sub.classList.remove('hidden');sub.setAttribute('required','');}
 });
-function recomendar(){const terreno=document.getElementByID('terrain').valor;const presupuesto=document.getElementByID('budget').valor;const level=document.getElementByID('level').valor;const objMaj=document.getElementByID('objective').valor;const objSub=document.getElementByID('objectiveSub').valor;let objetivo=objSub||objMaj;if(!level||!terreno||!presupuesto||!objetivo){alert('Por favor completa todos los campos.');return}if(!objetivo){alert('Completa el campo de objetivo.');return}
+function recomendar(){const terreno=document.getElementById('terrain').value;const presupuesto=document.getElementById('budget').value;const level=document.getElementById('level').value;const objMaj=document.getElementById('objective').value;const objSub=document.getElementById('objectiveSub').value;let objetivo=objSub||objMaj;if(!level||!terreno||!presupuesto||!objetivo){alert('Por favor completa todos los campos.');return}if(!objetivo){alert('Completa el campo de objetivo.');return}
 const presupuestoMax={'menos2000':2000,'2000-4000':4000,'mas4000':99999};const maxMXN=presupuestoMax[presupuesto]||4000;
 const catalogo=[
 {nombre:'Salomon Speedcross 6',marca:'Salomon',precio:'$2,800 MXN',precioNum:2800,descripcion:'Suela aggressive con taco profundo, ideal para terreno blando y mixto. Excelente tracción y soporte lateral.',terrenoKeys:['montaña','mixto','bosque']},
