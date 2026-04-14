@@ -1,89 +1,174 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tu equipo ideal — Shoe & Gear Coach</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; }
-        h1 { font-size: 1.5rem; margin-bottom: 6px; color: #1a1a1a; }
-        .subtitle { color: #666; font-size: 0.9rem; margin-bottom: 24px; }
-        .section-title { font-size: 1rem; font-weight: 600; margin: 20px 0 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #444; }
-        .shoe-card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid #e0e0e0; }
-        .shoe-card .name { font-size: 1.1rem; font-weight: 700; }
-        .shoe-card .brand { font-size: 0.8rem; color: #888; margin-bottom: 6px; }
-        .shoe-card .price { font-size: 1rem; font-weight: 600; color: #2d6a4f; margin-bottom: 6px; }
-        .shoe-card .desc { font-size: 0.875rem; color: #555; }
-        .shoe-card .tag { display: inline-block; background: #e8f4e8; color: #2d6a4f; border-radius: 4px; padding: 2px 8px; font-size: 0.75rem; margin-top: 8px; }
-        .gear-list { background: #fff; border-radius: 12px; padding: 16px; border: 1px solid #e0e0e0; }
-        .gear-list ul { padding-left: 20px; }
-        .gear-list li { padding: 4px 0; font-size: 0.9rem; color: #333; }
-        .actions { display: flex; gap: 12px; margin-top: 24px; }
-        .btn { flex: 1; padding: 14px; border: none; border-radius: 10px; font-size: 0.95rem; cursor: pointer; font-weight: 600; }
-        .btn-primary { background: #2d6a4f; color: #fff; }
-        .btn-secondary { background: #fff; color: #2d6a4f; border: 1.5px solid #2d6a4f; }
-        .no-data { text-align: center; padding: 40px 20px; color: #888; }
-    </style>
+<meta charset="UTF-8">
+<title>Shoe & Gear Coach – Cuestionario</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*, *::before, *::after { box-sizing:border-box; }
+body{font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;}
+.container{background:#fff;border-radius:8px;padding:24px;max-width:480px;margin:0 auto;box-shadow:0 2px 8px rgba(0,0,0,.1);}
+h2{margin-top:0;text-align:center;}
+.progress{background:#e0e0e0;border-radius:10px;height:8px;margin:20px 0;overflow:hidden;}
+.progress-bar{background:#28a745;height:100%;transition:width .3s;}
+.question{display:none;}
+.question.active{display:block;}
+label{display:block;margin:12px 0 4px;font-weight:600;}
+select, input{width:100%;padding:12px;border:1px solid #ccc;border-radius:4px;}
+button{width:100%;padding:14px;background:#28a745;color:#fff;border:none;border-radius:4px;font-size:16px;margin-top:20px;}
+button:hover{background:#218838;}
+.microcopy{color:#555;font-size:12px;text-align:center;margin-top:8px;}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div id="app"></div>
-    </div>
-    <script>
-        const data = JSON.parse(localStorage.getItem('trailResult') || 'null');
+<div class="container">
+<h2>Shoe & Gear Coach</h2>
+<div class="progress"><div class="progress-bar" style="width:0%"></div></div>
+<form id="quizForm">
+<div class="question active" data-step="1">
+<label for="level">Nivel:</label>
+<select id="level" required>
+<option value="">Seleccionar</option>
+<option value="principiante">Principiante</option>
+<option value="intermedio">Intermedio</option>
+<option value="avanzado">Avanzado</option>
+</select>
+<div class="microcopy">¿Qué tan experimentado es con la ruta?</div>
+</div>
+<div class="question" data-step="2">
+<label for="terrain">Terreno:</label>
+<select id="terrain" required>
+<option value="">Seleccionar</option>
+<option value="montaña">Montaña</option>
+<option value="bosque">Bosque</option>
+<option value="roca">Roca</option>
+<option value="mixto">Mixto</option>
+</select>
+<div class="microcopy">Tipo de terreno que prefieras.</div>
+</div>
+<div class="question" data-step="3">
+<label for="budget">Presupuesto (MXN):</label>
+<select id="budget" required>
+<option value="">Seleccionar</option>
+<option value="menos2000">Menos de $2,000</option>
+<option value="2000-4000">$2,000 - $4,000</option>
+<option value="mas4000">Más de $4,000</option>
+</select>
+<div class="microcopy">Rango de precios.</div>
+</div>
+<div class="question" data-step="4">
+<label for="shoeSize">Talla de calzado (MX):</label>
+<select id="shoeSize" required>
+<option value="">Seleccionar</option>
+<option value="22">22</option>
+<option value="22.5">22.5</option>
+<option value="23">23</option>
+<option value="23.5">23.5</option>
+<option value="24">24</option>
+<option value="24.5">24.5</option>
+<option value="25">25</option>
+<option value="25.5">25.5</option>
+<option value="26">26</option>
+<option value="26.5">26.5</option>
+<option value="27">27</option>
+<option value="27.5">27.5</option>
+<option value="28">28</option>
+<option value="28.5">28.5</option>
+<option value="29">29</option>
+<option value="29.5">29.5</option>
+<option value="30">30</option>
+</select>
+<div class="microcopy">Elige la talla que usas normalmente.</div>
+</div>
+<div class="question" data-step="5">
+<label for="objective">Objetivo:</label>
+<select id="objective" required>
+<option value="">Seleccionar</option>
+<option value="5K">5K</option>
+<option value="10K">10K</option>
+<option value="21K">21K</option>
+<option value="ultra">Ultra (50K+)</option>
+</select>
+<div class="microcopy">Distancia que planeas cubrir.</div>
+</div>
+<button type="button" id="nextBtn">Ver recomendación</button>
+</form>
+</div>
+<script>
+const form=document.getElementById('quizForm');
+const next=document.getElementById('nextBtn');
+const questions=document.querySelectorAll('.question');
+const progressBar=document.querySelector('.progress-bar');
+let current=0;
+function showQuestion(step){
+questions.forEach(q=>q.classList.toggle('active',+q.dataset.step===step));
+progressBar.style.width=(step-1)/questions.length*100+'%';
+}
+showQuestion(1);
+next.addEventListener('click',()=>{
+if(form.checkValidity()){
+if(current===questions.length-1){
+const data={level:form.level.value,terrain:form.terrain.value,budget:form.budget.value,shoeSize:form.shoeSize.value,objective:form.objective.value};
+localStorage.setItem('trailQuiz',JSON.stringify(data));
+window.location='resultados.html';
+} else {current++;showQuestion(current+1);}
+}else{form.reportValidity();}
+});
+</script>
+</body>
+</html>
 
-        if (!data) {
-            document.getElementById('app').innerHTML = '<div class="no-data"><p>No hay resultados. <a href="index.html">Volver al cuestionario</a></p></div>';
-        } else {
-            const objetivoLabel = { '5K': '5K', '10K': '10K', '21K': 'Media Maratón', ultra: 'Ultra 50K+' };
-            const zapatosHTML = data.zapatos.map(z => `
-                <div class="shoe-card">
-                    <div class="name">${z.nombre}</div>
-                    <div class="brand">${z.marca}</div>
-                    <div class="price">${z.precio}</div>
-                    <div class="desc">${z.descripcion}</div>
-                    <span class="tag">${z.terreno}</span>
-                </div>
-            `).join('');
-
-            const equipoHTML = data.equipo.length
-                ? '<ul>' + data.equipo.map(e => `<li>${e}</li>`).join('') + '</ul>'
-                : '<p style="color:#888">Sin equipo adicional recomendado por ahora.</p>';
-
-            document.getElementById('app').innerHTML = `
-                <h1>Tu equipo ideal para ${objetivoLabel[data.objetivo] || data.objetivo}</h1>
-                <p class="subtitle">Terreno: ${data.terreno} &middot; Presupuesto: ${data.presupuesto}</p>
-                <div class="section-title">Calzado recomendado</div>
-                ${zapatosHTML}
-                <div class="section-title">Equipo prioritario</div>
-                <div class="gear-list">${equipoHTML}</div>
-                <div class="actions">
-                    <button class="btn btn-primary" onclick="guardar()">Guardar mi lista</button>
-                    <a href="index.html"><button class="btn btn-secondary">Volver</button></a>
-                </div>
-            `;
-        }
-
-        function guardar() {
-            const data = JSON.parse(localStorage.getItem('trailResult') || 'null');
-            if (!data) return;
-            const texto = [
-                'MI LISTA DE EQUIPO — Shoe & Gear Coach',
-                '=====================================',
-                'Objetivo: ' + data.objetivo,
-                'Terreno: ' + data.terreno,
-                'Presupuesto: ' + data.presupuesto,
-                '',
-                'CALZADO RECOMENDADO:',
-                ...data.zapatos.map(z => '• ' + z.nombre + ' (' + z.marca + ') — ' + z.precio),
-                '',
-                'EQUIPO PRIORITARIO:',
-                ...data.equipo.map(e => '• ' + e)
-            ].join('\n');
-            navigator.clipboard.writeText(texto).then(() => alert('Lista copiada al portapapeles!'));
-        }
-    </script>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Tu equipo ideal — Shoe & Gear Coach</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*,*::before,*::after{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;color:#1a1a1a;padding:20px;}
+.container{max-width:640px;margin:0 auto;}
+h1{font-size:1.8rem;margin:0 0 6px;}
+.subtitle{color:#666;font-size:.9rem;margin-bottom:24px;}
+.section{margin-top:32px;}
+.section-title{font-size:1rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#444;margin-bottom:12px;}
+.shoe-card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #e0e0e0;}
+.shoe-card .name{font-size:1.1rem;font-weight:700;}
+.shoe-card .brand{font-size:.8rem;color:#888;margin-bottom:6px;}
+.shoe-card .price{font-size:1rem;font-weight:600;color:#2d6a4f;margin-bottom:6px;}
+.shoe-card .desc{font-size:.875rem;color:#555;}
+.shoe-card .tag{display:inline-block;background:#e8f4e8;color:#2d6a4f;border-radius:4px;padding:2px 8px;font-size:.75rem;margin-top:8px;}
+.gear-list{background:#fff;border-radius:12px;padding:16px;border:1px solid #e0e0e0;}
+.gear-list ul{padding-left:20px;margin:0;}
+.gear-list li{padding:4px 0;font-size:.9rem;color:#333;}
+.actions{display:flex;gap:12px;margin-top:24px;}
+.btn{flex:1;padding:14px;border:none;border-radius:10px;font-size:.95rem;cursor:pointer;font-weight:600;}
+.btn-primary{background:#2d6a4f;color:#fff;}
+.btn-secondary{background:#fff;color:#2d6a4f;border:1.5px solid #2d6a4f;}
+.no-data{text-align:center;padding:40px 20px;color:#888;}
+</style>
+</head>
+<body>
+<div class="container"><div id="app"></div></div>
+<script>
+const quiz=JSON.parse(localStorage.getItem('trailQuiz'))||null;
+if(!quiz){document.getElementById('app').innerHTML='<div class="no-data"><p>No hay resultados. <a href="index.html">Volver al cuestionario</a></p></div>';return;}
+const objetivos={'5K':'5K','10K':'10K','21K':'Media Maratón','ultra':'Ultra 50K+'};
+const zapatos=[
+{nombre:'Base Runner 1',marca:'MarcaA',precio:'$3,200',descripcion:'Ligero y comodo para distancias cortas',terreno:'bosque'},
+{nombre:'Trail Blazer',marca:'MarcaB',precio:'$4,500',descripcion:'Apropio para terrenos mixtos',terreno:'mixto'},
+{nombre:'Hard Rock Pro',marca:'MarcaC',precio:'$5,500',descripcion:'Diseñado para terrenos rocosos',terreno:'roca'}
+];
+const equipo=['Gorra','Reloj GPS','Botellas de agua'];
+const app=document.getElementById('app');
+app.innerHTML=`<h1>Tu equipo ideal para ${objetivos[quiz.objective]||quiz.objective}</h1>
+<p class="subtitle">Terreno: ${quiz.terrain} &middot; Presupuesto: ${quiz.budget}</p>
+<div class="section"><div class="section-title">Calzado recomendado</div>
+${zapatos.map(z=>`<div class="shoe-card"><div class="name">${z.nombre}</div><div class="brand">${z.marca}</div><div class="price">${z.precio}</div><div class="desc">${z.descripcion}</div><span class="tag">${z.terreno}</span></div>`).join('')}
+</div>
+<div class="section"><div class="section-title">Equipo prioritario</div><div class="gear-list"><ul>${equipo.map(e=>`<li>${e}</li>`).join('')}</ul></div></div>
+<div class="actions"><button class="btn btn-primary" onclick="copyList()">Guardar mi lista</button><a href="index.html"><button class="btn btn-secondary">Volver</button></a></div>`;
+function copyList(){let txt='MI LISTA DE EQUIPO — Shoe & Gear Coach\n=====================================\nObjetivo: '+quiz.objective+'\nTerreno: '+quiz.terrain+'\nPresupuesto: '+quiz.budget+'\n\nCALZADO RECOMENDADO:\n'+zapatos.map(z=>'• '+z.nombre+' ('+z.marca+') — '+z.precio).join('\n')+'\n\nEQUIPO PRIORITARIO:\n'+equipo.map(e=>'• '+e).join('\n');navigator.clipboard.writeText(txt).then(()=>alert('Lista copiada al portapapeles!'));}
+</script>
 </body>
 </html>
