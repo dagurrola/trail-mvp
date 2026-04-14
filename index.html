@@ -21,7 +21,7 @@ button:hover{background-color:#218838}
 <h2>Trail Shoe Coach</h2>
 <p>Encuentra el par de tenis ideal para tu correr y 2 recomendaciones más al responder 5 preguntas sobre tu nivel de corredor, terreno donde lo usarás y tu presupuesto.</p>
 <form id="recomendationForm">
-<label for="level">Nivel:</label>
+<label for="level">¿Cuál es tu nivel?</label>
 <select id="level" required>
 <option value="">Seleccionar</option>
 <option value="principiante">Principiante</option>
@@ -29,7 +29,7 @@ button:hover{background-color:#218838}
 <option value="avanzado">Avanzado</option>
 </select>
 <p id="levelDesc" style="font-size:0.85rem;color:#666;margin-top:5px">
-<em>Próximas opciones: 
+<em>Próximas opciones:
 <ul>
 <li>Principiante (0‑6 meses, carreras de 5‑10 K)</li>
 <li>Intermedio (1‑2 años, carreras hasta 21 K)</li>
@@ -62,8 +62,7 @@ button:hover{background-color:#218838}
 <option value="competencia">Competencia</option>
 </select>
 
-<select id="objectiveSub" class="hidden" required>
-</select>
+<select id="objectiveSub" class="hidden" required></select>
 
 <button type="button" onclick="recomendar()">Ver recomendación</button>
 </form>
@@ -74,7 +73,7 @@ const sub=document.getElementById('objectiveSub');sub.innerHTML='';sub.classList
 if(this.value==='entrenamiento'){sub.innerHTML='<option value="">Seleccionar</option>'+'<option value="tecnica">Mejorar técnica</option>'+'<option value="distancia">Aumentar distancia</option>'+'<option value="velocidad">Velocidad</option>';sub.classList.remove('hidden');sub.setAttribute('required','');}
 if(this.value==='competencia'){sub.innerHTML='<option value="">Seleccionar</option>'+'<option value="5K">5 K</option>'+'<option value="10K">10 K</option>'+'<option value="21K">21 K</option>'+'<option value="51Kplus">51 K+</option>';sub.classList.remove('hidden');sub.setAttribute('required','');}
 });
-function recomendar(){const terreno=document.getElementById('terrain').value;const presupuesto=document.getElementById('budget').value;const level=document.getElementById('level').value;const objMaj=document.getElementById('objective').value;const objSub=document.getElementById('objectiveSub').value;let objetivo=objSub||objMaj;if(!level||!terreno||!presupuesto||!objetivo){alert('Por favor completa todos los campos.');return}if(!objetivo){alert('Completa el campo de objetivo.');return}
+function recomendar(){const terreno=document.getElementById('terrain').value;const presupuesto=document.getElementById('budget').value;const level=document.getElementById('level').value;const objMaj=document.getElementById('objective').value;const objSub=document.getElementById('objectiveSub').value;let objetivo=objSub||objMaj;if(!level||!terreno||!presupuesto||!objetivo){alert('Por favor completa todos los campos.');return}
 const presupuestoMax={'menos2000':2000,'2000-4000':4000,'mas4000':99999};const maxMXN=presupuestoMax[presupuesto]||4000;
 const catalogo=[
 {nombre:'Salomon Speedcross 6',marca:'Salomon',precio:'$2,800 MXN',precioNum:2800,descripcion:'Suela aggressive con taco profundo, ideal para terreno blando y mixto. Excelente tracción y soporte lateral.',terrenoKeys:['montaña','mixto','bosque']},
