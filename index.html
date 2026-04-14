@@ -1,122 +1,104 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Shoe & Gear Coach</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            background: #fff;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin: 15px 0 5px;
-            font-weight: bold;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trail Shoe Coach</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;background:#f4f4f4;margin:0;padding:20px}
+.container{background:#fff;padding:25px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);max-width:500px;margin:0 auto}
+h2{text-align:center;margin-bottom:20px}
+p{font-size:0.95rem;color:#555;text-align:center;margin:-8px 0 22px;line-height:1.55}
+label{display:block;margin:15px 0 5px;font-weight:bold}
+input,select{width:100%;padding:10px;margin-bottom:15px;border:1px solid #ccc;border-radius:4px}
+button{width:100%;padding:12px;background-color:#28a745;color:#fff;border:none;border-radius:4px;font-size:16px;cursor:pointer}
+button:hover{background-color:#218838}
+.hidden{display:none}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h2>Shoe & Gear Coach</h2>
-        <p style="text-align:center;font-size:0.95rem;color:#555;margin:-8px 0 22px;line-height:1.55;">
-            Responde 5 preguntas sobre tu nivel, terreno y presupuesto.<br>
-            Recibe 3 opciones de calzado personalizadas con la explicación<br>de por qué cada una es para ti.
-        </p>
-        <form id="recomendationForm">
-            <label for="level">Nivel:</label>
-            <select id="level" required>
-                <option value="">Seleccionar</option>
-                <option value="principiante">Principiante</option>
-                <option value="intermedio">Intermedio</option>
-                <option value="avanzado">Avanzado</option>
-            </select>
+<div class="container">
+<h2>Trail Shoe Coach</h2>
+<p>Encuentra el par de tenis ideal para tu correr y 2 recomendaciones más al responder 5 preguntas sobre tu nivel de corredor, terreno donde lo usarás y tu presupuesto.</p>
+<form id="recomendationForm">
+<label for="level">Nivel:</label>
+<select id="level" required>
+<option value="">Seleccionar</option>
+<option value="principiante">Principiante</option>
+<option value="intermedio">Intermedio</option>
+<option value="avanzado">Avanzado</option>
+</select>
+<p id="levelDesc" style="font-size:0.85rem;color:#666;margin-top:5px">
+<em>Próximas opciones: 
+<ul>
+<li>Principiante (0‑6 meses, carreras de 5‑10 K)</li>
+<li>Intermedio (1‑2 años, carreras hasta 21 K)</li>
+<li>Avanzado (más de 2 años, ultras y terreno técnico)</li>
+</ul>
+</em>
+</p>
 
-            <label for="terrain">Terreno:</label>
-            <select id="terrain" required>
-                <option value="">Seleccionar</option>
-                <option value="montaña">Montaña</option>
-                <option value="bosque">Bosque</option>
-                <option value="roca">Roca</option>
-                <option value="mixto">Mixto</option>
-            </select>
+<label for="terrain">En qué tipo de terreno lo usarás:</label>
+<select id="terrain" required>
+<option value="">Seleccionar</option>
+<option value="montaña">Montaña</option>
+<option value="bosque">Bosque</option>
+<option value="roca">Roca</option>
+<option value="mixto">Mixto/Variado</option>
+</select>
 
-            <label for="budget">Presupuesto (MXN):</label>
-            <select id="budget" required>
-                <option value="">Seleccionar</option>
-                <option value="menos2000">Menos de $2,000</option>
-                <option value="2000-4000">$2,000 - $4,000</option>
-                <option value="mas4000">Más de $4,000</option>
-            </select>
+<label for="budget">Cuál es tu presupuesto:</label>
+<select id="budget" required>
+<option value="">Seleccionar</option>
+<option value="menos2000">Menos de $2,000</option>
+<option value="2000-4000">$2,000 – $4,000</option>
+<option value="mas4000">Más de $4,000</option>
+</select>
 
-            <label for="shoeSize">Talla de calzado (MX):</label>
-            <select id="shoeSize" required>
-                <option value="">Seleccionar</option>
-                <option value="22">22</option>
-                <option value="22.5">22.5</option>
-                <option value="23">23</option>
-                <option value="23.5">23.5</option>
-                <option value="24">24</option>
-                <option value="24.5">24.5</option>
-                <option value="25">25</option>
-                <option value="25.5">25.5</option>
-                <option value="26">26</option>
-                <option value="26.5">26.5</option>
-                <option value="27">27</option>
-                <option value="27.5">27.5</option>
-                <option value="28">28</option>
-                <option value="28.5">28.5</option>
-                <option value="29">29</option>
-                <option value="29.5">29.5</option>
-                <option value="30">30</option>
-            </select>
+<label for="objective">Cuál es tu objetivo:</label>
+<select id="objective" required>
+<option value="">Seleccionar</option>
+<option value="entrenamiento">Entrenamiento</option>
+<option value="competencia">Competencia</option>
+</select>
 
-            <label for="objective">Objetivo:</label>
-            <select id="objective" required>
-                <option value="">Seleccionar</option>
-                <option value="5K">5K</option>
-                <option value="10K">10K</option>
-                <option value="21K">21K</option>
-                <option value="ultra">Ultra (50K+)</option>
-            </select>
+<select id="objectiveSub" class="hidden" required>
+</select>
 
-            <button type="button" onclick="recomendar()">Ver recomendación</button>
-        </form>
-    </div>
-    <script src="recomendacion.js"></script>
+<button type="button" onclick="recomendar()">Ver recomendación</button>
+</form>
+</div>
+<script>
+document.getElementById('objective').addEventListener('change', function(){
+const sub=document.getElementById('objectiveSub');sub.innerHTML='';sub.classList.add('hidden');sub.removeAttribute('required');
+if(this.value==='entrenamiento'){sub.innerHTML='<option value="">Seleccionar</option>'+'<option value="tecnica">Mejorar técnica</option>'+'<option value="distancia">Aumentar distancia</option>'+'<option value="velocidad">Velocidad</option>';sub.classList.remove('hidden');sub.setAttribute('required','');}
+if(this.value==='competencia'){sub.innerHTML='<option value="">Seleccionar</option>'+'<option value="5K">5 K</option>'+'<option value="10K">10 K</option>'+'<option value="21K">21 K</option>'+'<option value="51Kplus">51 K+</option>';sub.classList.remove('hidden');sub.setAttribute('required','');}
+});
+function recomendar(){const terreno=document.getElementById('terrain').value;const presupuesto=document.getElementById('budget').value;const level=document.getElementById('level').value;const objMaj=document.getElementById('objective').value;const objSub=document.getElementById('objectiveSub').value;let objetivo=objSub||objMaj;if(!level||!terrain||!presupuesto||!objetivo){alert('Por favor completa todos los campos.');return}if(!objetivo){alert('Completa el campo de objetivo.');return}
+const presupuestoMax={'menos2000':2000,'2000-4000':4000,'mas4000':99999};const maxMXN=presupuestoMax[presupuesto]||4000;
+const catalogo=[
+{nombre:'Salomon Speedcross 6',marca:'Salomon',precio:'$2,800 MXN',precioNum:2800,descripcion:'Suela aggressive con taco profundo, ideal para terreno blando y mixto. Excelente tracción y soporte lateral.',terrenoKeys:['montaña','mixto','bosque']},
+{nombre:'Hoka Speedgoat 5',marca:'Hoka',precio:'$3,500 MXN',precioNum:3500,descripcion:'Máxima amortiguación para distancias largas. Ideal para ultras y corredores que priorizan comodidad sobre velocidad.',terrenoKeys:['montaña','mixto','bosque','roca']},
+{nombre:'Brooks Cascadia 17',marca:'Brooks',precio:'$2,200 MXN',precioNum:2200,descripcion:'Balance perfecto entre tracción y amortiguación. Versátil para principiantes e intermedios en terreno variado.',terrenoKeys:['mixto','bosque','montaña']},
+{nombre:'Inov-8 Trailfly G 270',marca:'Inov-8',precio:'$3,200 MXN',precioNum:3200,descripcion:'Suela de grafeno para agarre extremo en roca. Muy ligero, para corredores técnicos y roca seca.',terrenoKeys:['roca','mixto']},
+{nombre:'Salomon Ultra Glide 2',marca:'Salomon',precio:'$3,100 MXN',precioNum:3100,descripcion:'Suela agresiva con tacos cortos, ideal para rutas de trail ligero y ascensos cortos.',terrenoKeys:['bosque','traje']},
+{nombre:'New Balance Fresh Foam Trail',marca:'New Balance',precio:'$2,500 MXN',precioNum:2500,descripcion:'Amplio confort con amortiguación y suela versátil, apto para distancias largas y terrenos mixtos.',terrenoKeys:['montaña','mixto','roca','bosque']}
+];
+let candidatos=catalogo.filter(z=>z.terrenoKeys.includes(terrain)&&z.precioNum<=maxMXN);
+if(candidatos.length===0)candidatos=catalogo.filter(z=>z.terrenoKeys.includes(terrain));
+if(candidatos.length===0)candidatos=[...catalogo];
+candidatos.sort((a,b)=>{const aMatch=a.terrenoKeys[0]===terrain?-1:0;const bMatch=b.terrenoKeys[0]===terrain?-1:0;return aMatch-bMatch||a.precioNum-b.precioNum;});
+const zapatos=candidatos.slice(0,3);
+const equipo=['Medias técnicas de trail (anti-ampolla)','Hidratación: botella suave 500ml mínimo'];
+if(['21K','51Kplus'].includes(objetivo)){equipo.push('Chaleco de hidratación (2L+)', 'Geles energéticos / nutrición de carrera');}
+if(objetivo==='51Kplus'){equipo.push('Bastones de trail (carbono o aluminio)','Kit de emergencia (manta, silbato, linterna)','Gorra y protector solar');}
+if(terrain==='roca'){equipo.push('Polainas anti-piedra');}
+const presupuestoLabel={'menos2000':'Menos de $2,000','2000-4000':'$2,000–$4,000','mas4000':'Más de $4,000'};
+const result={zapatos:zapatos.map(z=>({nombre:z.nombre,marca:z.marca,precio:z.precio,descripcion:z.descripcion})),equipo,objetivo,terrain,presupuesto:presupuestoLabel[presupuesto]||presupuesto};
+localStorage.setItem('trailResult',JSON.stringify(result));
+window.location.href='resultados.html';
+}
+</script>
+<script src="recomendacion.js"></script>
 </body>
 </html>
