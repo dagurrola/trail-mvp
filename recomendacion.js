@@ -10,7 +10,6 @@ function recomendar() {
         return;
     }
 
-    // Map budget strings to numeric max for filtering
     const presupuestoMax = { 'menos2000': 2000, '2000-4000': 4000, 'mas4000': 99999 };
     const maxMXN = presupuestoMax[presupuesto] || 4000;
 
@@ -50,42 +49,52 @@ function recomendar() {
             descripcion: 'Suela de grafeno para agarre extremo en roca. Muy ligero, para corredores técnicos y roca seca.',
             terreno: 'Roca / Técnico',
             terrenoKeys: ['roca', 'mixto']
+        },
+        {
+            nombre: 'Salomon Ultra Glide 2',
+            marca: 'Salomon',
+            precio: '$3,100 MXN',
+            precioNum: 3100,
+            descripcion: 'Suela agresiva con tacos cortos, ideal para rutas de trail ligero y ascensos cortos.',
+            terreno: 'Trail ligero',
+            terrenoKeys: ['bosque', 'traje']
+        },
+        {
+            nombre: 'New Balance Fresh Foam Trail',
+            marca: 'New Balance',
+            precio: '$2,500 MXN',
+            precioNum: 2500,
+            descripcion: 'Amplio confort con amortiguación y suela versátil, apto para distancias largas y terrenos mixtos.',
+            terreno: 'Distancia larga / Todo terreno',
+            terrenoKeys: ['montaña', 'mixto', 'roca', 'bosque']
         }
     ];
 
-    // Filter by terrain and budget
     let candidatos = catalogo.filter(z =>
         z.terrenoKeys.includes(terreno) && z.precioNum <= maxMXN
     );
 
-    // Fallback: if nothing in budget, pick cheapest that matches terrain
     if (candidatos.length === 0) {
         candidatos = catalogo.filter(z => z.terrenoKeys.includes(terreno));
     }
-    // Fallback total
     if (candidatos.length === 0) {
         candidatos = [...catalogo];
     }
 
-    // Sort by terrain match first, then price
     candidatos.sort((a, b) => {
         const aMatch = a.terrenoKeys[0] === terreno ? -1 : 0;
         const bMatch = b.terrenoKeys[0] === terreno ? -1 : 0;
         return aMatch - bMatch || a.precioNum - b.precioNum;
     });
 
-    const zapatos = candidatos.slice(0, 2);
+    const zapatos = candidatos.slice(0, 3);
 
-    // Equipment list based on goal
     const equipo = ['Medias técnicas de trail (anti-ampolla)', 'Hidratación: botella suave 500ml mínimo'];
     if (objetivo === '21K' || objetivo === 'ultra') {
-        equipo.push('Chaleco de hidratación (2L+)');
-        equipo.push('Geles energéticos / nutrición de carrera');
+        equipo.push('Chaleco de hidratación (2L+)', 'Geles energéticos / nutrición de carrera');
     }
     if (objetivo === 'ultra') {
-        equipo.push('Bastones de trail (carbono o aluminio)');
-        equipo.push('Kit de emergencia (manta, silbato, linterna)');
-        equipo.push('Gorra y protector solar');
+        equipo.push('Bastones de trail (carbono o aluminio)', 'Kit de emergencia (manta, silbato, linterna)', 'Gorra y protector solar');
     }
     if (terreno === 'roca') {
         equipo.push('Polainas anti-piedra');
