@@ -2,126 +2,6 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Shoe & Gear Coach – Cuestionario</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-*, *::before, *::after { box-sizing:border-box; }
-body{font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;}
-.container{background:#fff;border-radius:8px;padding:24px;max-width:480px;margin:0 auto;box-shadow:0 2px 8px rgba(0,0,0,.1);}
-h2{margin-top:0;text-align:center;}
-.progress{background:#e0e0e0;border-radius:10px;height:8px;margin:20px 0;overflow:hidden;}
-.progress-bar{background:#28a745;height:100%;transition:width .3s;}
-.question{display:none;}
-.question.active{display:block;}
-label{display:block;margin:12px 0 4px;font-weight:600;}
-select, input{width:100%;padding:12px;border:1px solid #ccc;border-radius:4px;}
-button{width:100%;padding:14px;background:#28a745;color:#fff;border:none;border-radius:4px;font-size:16px;margin-top:20px;}
-button:hover{background:#218838;}
-.microcopy{color:#555;font-size:12px;text-align:center;margin-top:8px;}
-</style>
-</head>
-<body>
-<div class="container">
-<h2>Shoe & Gear Coach</h2>
-<div class="progress"><div class="progress-bar" style="width:0%"></div></div>
-<form id="quizForm">
-<div class="question active" data-step="1">
-<label for="level">Nivel:</label>
-<select id="level" required>
-<option value="">Seleccionar</option>
-<option value="principiante">Principiante</option>
-<option value="intermedio">Intermedio</option>
-<option value="avanzado">Avanzado</option>
-</select>
-<div class="microcopy">¿Qué tan experimentado es con la ruta?</div>
-</div>
-<div class="question" data-step="2">
-<label for="terrain">Terreno:</label>
-<select id="terrain" required>
-<option value="">Seleccionar</option>
-<option value="montaña">Montaña</option>
-<option value="bosque">Bosque</option>
-<option value="roca">Roca</option>
-<option value="mixto">Mixto</option>
-</select>
-<div class="microcopy">Tipo de terreno que prefieras.</div>
-</div>
-<div class="question" data-step="3">
-<label for="budget">Presupuesto (MXN):</label>
-<select id="budget" required>
-<option value="">Seleccionar</option>
-<option value="menos2000">Menos de $2,000</option>
-<option value="2000-4000">$2,000 - $4,000</option>
-<option value="mas4000">Más de $4,000</option>
-</select>
-<div class="microcopy">Rango de precios.</div>
-</div>
-<div class="question" data-step="4">
-<label for="shoeSize">Talla de calzado (MX):</label>
-<select id="shoeSize" required>
-<option value="">Seleccionar</option>
-<option value="22">22</option>
-<option value="22.5">22.5</option>
-<option value="23">23</option>
-<option value="23.5">23.5</option>
-<option value="24">24</option>
-<option value="24.5">24.5</option>
-<option value="25">25</option>
-<option value="25.5">25.5</option>
-<option value="26">26</option>
-<option value="26.5">26.5</option>
-<option value="27">27</option>
-<option value="27.5">27.5</option>
-<option value="28">28</option>
-<option value="28.5">28.5</option>
-<option value="29">29</option>
-<option value="29.5">29.5</option>
-<option value="30">30</option>
-</select>
-<div class="microcopy">Elige la talla que usas normalmente.</div>
-</div>
-<div class="question" data-step="5">
-<label for="objective">Objetivo:</label>
-<select id="objective" required>
-<option value="">Seleccionar</option>
-<option value="5K">5K</option>
-<option value="10K">10K</option>
-<option value="21K">21K</option>
-<option value="ultra">Ultra (50K+)</option>
-</select>
-<div class="microcopy">Distancia que planeas cubrir.</div>
-</div>
-<button type="button" id="nextBtn">Ver recomendación</button>
-</form>
-</div>
-<script>
-const form=document.getElementById('quizForm');
-const next=document.getElementById('nextBtn');
-const questions=document.querySelectorAll('.question');
-const progressBar=document.querySelector('.progress-bar');
-let current=0;
-function showQuestion(step){
-questions.forEach(q=>q.classList.toggle('active',+q.dataset.step===step));
-progressBar.style.width=(step-1)/questions.length*100+'%';
-}
-showQuestion(1);
-next.addEventListener('click',()=>{
-if(form.checkValidity()){
-if(current===questions.length-1){
-const data={level:form.level.value,terrain:form.terrain.value,budget:form.budget.value,shoeSize:form.shoeSize.value,objective:form.objective.value};
-localStorage.setItem('trailQuiz',JSON.stringify(data));
-window.location='resultados.html';
-} else {current++;showQuestion(current+1);}
-}else{form.reportValidity();}
-});
-</script>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
 <title>Tu equipo ideal — Shoe & Gear Coach</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -146,6 +26,7 @@ h1{font-size:1.8rem;margin:0 0 6px;}
 .btn-primary{background:#2d6a4f;color:#fff;}
 .btn-secondary{background:#fff;color:#2d6a4f;border:1.5px solid #2d6a4f;}
 .no-data{text-align:center;padding:40px 20px;color:#888;}
+.microcopy{color:#555;font-size:12px;text-align:center;margin-top:8px;}
 </style>
 </head>
 <body>
@@ -167,6 +48,7 @@ app.innerHTML=`<h1>Tu equipo ideal para ${objetivos[quiz.objective]||quiz.object
 ${zapatos.map(z=>`<div class="shoe-card"><div class="name">${z.nombre}</div><div class="brand">${z.marca}</div><div class="price">${z.precio}</div><div class="desc">${z.descripcion}</div><span class="tag">${z.terreno}</span></div>`).join('')}
 </div>
 <div class="section"><div class="section-title">Equipo prioritario</div><div class="gear-list"><ul>${equipo.map(e=>`<li>${e}</li>`).join('')}</ul></div></div>
+<div class="microcopy">Haz clic en "Guardar mi lista" para copiar la lista completa al portapapeles.</div>
 <div class="actions"><button class="btn btn-primary" onclick="copyList()">Guardar mi lista</button><a href="index.html"><button class="btn btn-secondary">Volver</button></a></div>`;
 function copyList(){let txt='MI LISTA DE EQUIPO — Shoe & Gear Coach\n=====================================\nObjetivo: '+quiz.objective+'\nTerreno: '+quiz.terrain+'\nPresupuesto: '+quiz.budget+'\n\nCALZADO RECOMENDADO:\n'+zapatos.map(z=>'• '+z.nombre+' ('+z.marca+') — '+z.precio).join('\n')+'\n\nEQUIPO PRIORITARIO:\n'+equipo.map(e=>'• '+e).join('\n');navigator.clipboard.writeText(txt).then(()=>alert('Lista copiada al portapapeles!'));}
 </script>
