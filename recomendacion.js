@@ -1,11 +1,12 @@
 function recomendar() {
     const terreno = document.getElementById('terrain').value;
     const presupuesto = document.getElementById('budget').value;
-    const objetivo = document.getElementById('objective').value;
+    const objetivoPrincipal = document.getElementById('objectiveMain').value;
+    const subObjetivo = document.getElementById('objectiveSub').value;
     const nivel = document.getElementById('level').value;
     const talla = document.getElementById('shoeSize').value;
 
-    if (!terreno || !presupuesto || !objetivo || !nivel || !talla) {
+    if (!terreno || !presupuesto || !objetivoPrincipal || !subObjetivo || !nivel || !talla) {
         alert('Por favor completa todos los campos.');
         return;
     }
@@ -90,14 +91,16 @@ function recomendar() {
     const zapatos = candidatos.slice(0, 3);
 
     const equipo = ['Medias técnicas de trail (anti-ampolla)', 'Hidratación: botella suave 500ml mínimo'];
-    if (objetivo === '21K' || objetivo === 'ultra') {
+
+    const terrenoLower = terreno.toLowerCase();
+    if (['montaña', 'roca'].some(t => terrenoLower.includes(t))) {
+        equipo.push('Bastones de trail', 'Polainas anti-piedra');
+    }
+    if (['bosque', 'mixto'].some(t => terrenoLower.includes(t))) {
+        equipo.push('Medias técnicas de trail', 'Hidratación: botella suave 500ml mínimo');
+    }
+    if (subObjetivo && subObjetivo.toLowerCase().includes('ultra')) {
         equipo.push('Chaleco de hidratación (2L+)', 'Geles energéticos / nutrición de carrera');
-    }
-    if (objetivo === 'ultra') {
-        equipo.push('Bastones de trail (carbono o aluminio)', 'Kit de emergencia (manta, silbato, linterna)', 'Gorra y protector solar');
-    }
-    if (terreno === 'roca') {
-        equipo.push('Polainas anti-piedra');
     }
 
     const presupuestoLabel = { 'menos2000': 'Menos de $2,000', '2000-4000': '$2,000–$4,000', 'mas4000': 'Más de $4,000' };
@@ -111,7 +114,8 @@ function recomendar() {
             terreno: z.terreno
         })),
         equipo,
-        objetivo,
+        objetivoPrincipal,
+        subObjetivo,
         terreno,
         presupuesto: presupuestoLabel[presupuesto] || presupuesto
     };
