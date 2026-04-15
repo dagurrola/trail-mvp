@@ -95,7 +95,7 @@ const zapatos=candidatos.slice(0,3);
 const equipo=['Medias técnicas de trail (anti-ampolla)','Hidratación: botella suave 500ml mínimo'];
 if(['21K','51Kplus'].includes(objetivo)){equipo.push('Chaleco de hidratación (2L+)', 'Geles energéticos / nutrición de carrera');}
 if(objetivo==='51Kplus'){equipo.push('Bastones de trail (carbono o aluminio)','Kit de emergencia (manta, silbato, linterna)','Gorra y protector solar');}
-if(terrain==='roca'){equipo.push('Polainas anti-piedra');}
+if(terreno==='roca'){equipo.push('Polainas anti-piedra');}
 const presupuestoLabel={'menos2000':'Menos de $2,000','2000-4000':'$2,000–$4,000','mas4000':'Más de $4,000'};
 const result={zapatos:zapatos.map(z=>({nombre:z.nombre,marca:z.marca,precio:z.precio,descripcion:z.descripcion})),equipo,objetivo,terreno,presupuesto:presupuestoLabel[presupuesto]||presupuesto};
 localStorage.setItem('trailResult',JSON.stringify(result));
