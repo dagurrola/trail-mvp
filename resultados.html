@@ -35,7 +35,7 @@ const data = JSON.parse(localStorage.getItem('trailResult') || 'null');
 if (!data) {
     document.getElementById('app').innerHTML = '<div class="no-data"><p>Sin resultados. <a href="index.html">Volver al cuestionario</a></p></div>';
 } else {
-    const labels = { '5K':'5K', '10K':'10K', '21K':'Media Maratón', 'ultra':'Ultra 50K+', 'montaña':'Montaña', 'bosque':'Bosque', 'roca':'Roca', 'mixto':'Mixto' };
+    const labels = { '5K':'5K', '10K':'10K', '21K':'Media Maratón', '51Kplus':'Ultra 51K+', 'ultra':'Ultra 50K+', 'tecnica':'Técnica', 'distancia':'Distancia', 'velocidad':'Velocidad', 'montaña':'Montaña', 'bosque':'Bosque', 'roca':'Roca', 'mixto':'Mixto', 'entrenamiento':'Entrenamiento', 'competencia':'Competencia' };
     const pLabel = { 'menos2000':'menos de $2,000', '2000-4000':'$2,000–$4,000', 'mas4000':'más de $4,000' };
 
     function whyCard(z, i, objetivo, terreno) {
