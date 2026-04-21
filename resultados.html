@@ -25,6 +25,11 @@ h1{font-size:1.4rem;margin-bottom:4px}
 .btn-primary{background:#2d6a4f;color:#fff}
 .btn-back{background:#fff;color:#2d6a4f;border:1.5px solid #2d6a4f;text-decoration:none;display:flex;align-items:center;justify-content:center}
 .no-data{text-align:center;padding:40px 20px;color:#888}
+.tag{display:inline-block;background:#e8f4e8;color:#2d6a4f;font-size:0.7rem;font-weight:600;
+  padding:2px 8px;border-radius:20px;margin:2px 2px 0 0;text-transform:capitalize}
+.buy-link{display:inline-block;margin-top:6px;font-size:0.8rem;color:#2d6a4f;
+  font-weight:600;text-decoration:none;border-bottom:1px solid #2d6a4f}
+.buy-link:hover{opacity:0.75}
 </style>
 </head>
 <body>
@@ -46,12 +51,14 @@ if (!data) {
 
     const zapatosHTML = data.zapatos.map((z, i) => {
         const badge = i===0?'<span class="badge">Recomendado</span>':'';
+        const tagsHtml = (z.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
+        const linkHtml = z.link?`<br><a class="buy-link" href="${z.link}" target="_blank">Ver precio →</a>`:'';
         return `
             <tr>
-                <td>${badge}${z.nombre}</td>
+                <td>${badge}${z.nombre}${linkHtml}</td>
                 <td>${z.marca}</td>
                 <td>${z.precio}</td>
-                <td>${z.terreno}</td>
+                <td>${tagsHtml||z.terreno}</td>
                 <td>${z.descripcion}</td>
             </tr>`;
     }).join('');
