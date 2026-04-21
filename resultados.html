@@ -52,12 +52,12 @@ if (!data) {
     const zapatosHTML = data.zapatos.map((z, i) => {
         const badge = i===0?'<span class="badge">Recomendado</span>':'';
         const tagsHtml = (z.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
-        const linkHtml = z.link?`<br><a class="buy-link" href="${z.link}" target="_blank">Ver precio →</a>`:'';
+        const linkHtml = z.link?`<br><a class="buy-link" href="${z.link}" target="_blank">Comprar</a>`:'';
         return `
             <tr>
-                <td>${badge}${z.nombre}${linkHtml}</td>
+                <td>${badge}${z.nombre}</td>
                 <td>${z.marca}</td>
-                <td>${z.precio}</td>
+                <td>${z.precio}${linkHtml}</td>
                 <td>${tagsHtml||z.terreno}</td>
                 <td>${z.descripcion}</td>
             </tr>`;
