@@ -73,44 +73,45 @@ function recomendar(){
   let objetivo=objSub||objMaj;
   if(!level||!terreno||!presupuesto||!objetivo){alert('Por favor completa todos los campos.');return}
 
-  // Budget: hard max + tolerancia para slots 2 y 3
+  // REGLA 1: Terrain buckets
+  const terrainBucket={
+    montaña:'technical_trail',
+    roca:'technical_trail',
+    bosque:'mixed_trail',
+    mixto:'mixed_trail'
+  };
+  const bucket=terrainBucket[terreno]||'mixed_trail';
+
+  // Budget
   const maxMXN={'menos2000':1999,'2000-4000':4000,'mas4000':99999}[presupuesto]||4000;
-  const tolerance={'menos2000':0.10,'2000-4000':0.15,'mas4000':0.20}[presupuesto]||0.15;
+  const tolerance={'menos2000':0.12,'2000-4000':0.15,'mas4000':0.20}[presupuesto]||0.15;
   const maxSoft=maxMXN===99999?99999:Math.round(maxMXN*(1+tolerance));
 
-  // Etiqueta de presupuesto por zapato
   function budgetBadge(z){
     if(z.precioNum<=maxMXN) return 'dentro';
     if(z.precioNum<=maxSoft) return 'subir';
     return 'fuera';
   }
 
-  // Pesos de scoring por terreno
-  const weights={
-    montaña:{amortiguacion:0.15,agarre:0.30,estabilidad:0.30},
-    roca:   {amortiguacion:0.10,agarre:0.45,estabilidad:0.30},
-    bosque: {amortiguacion:0.25,agarre:0.25,estabilidad:0.25},
-    mixto:  {amortiguacion:0.25,agarre:0.25,estabilidad:0.25}
-  };
-  const w=weights[terreno]||weights.mixto;
-
   const catalogo=[
     {
       nombre:'Merrell Trail Glove 7',marca:'Merrell',precio:'$1,600 MXN',precioNum:1600,
-      terreno:'Mixto / Bosque',tags:['mixto','bosque'],terrenoKeys:['mixto','bosque','montaña'],
+      bucket:['mixed_trail','door_to_trail'],
+      terrenoKeys:['mixto','bosque','montaña'],tags:['mixto','bosque'],terreno:'Mixto / Bosque',
       nivelKeys:['principiante'],objetivoKeys:['entrenamiento','tecnica','distancia'],
-      rol:'ligero',mejorPara:'Iniciarse sin sobre-invertir',
+      rol:'ligero',shortReason:'Tu primer zapato de trail sin arriesgar mucho dinero.',
       subhead:'La más ligera y accesible para empezar.',
-      copy:'Tu primer zapato de trail sin arriesgar mucho dinero. Suela funcional, diseño zero-drop y un precio que no duele.',
+      copy:'Tu primer zapato de trail sin arriesgar mucho dinero. Suela funcional, zero-drop y un precio que no duele.',
       highlight:'Ideal si todavía no sabes cuánto te va a gustar el trail.',
       metricas:{amortiguacion:1,agarre:3,estabilidad:2},distancia:'Corta',
       link:'https://www.amazon.com.mx/s?k=Merrell+Trail+Glove+trail+running'
     },
     {
       nombre:'Salomon Sense Ride 5',marca:'Salomon',precio:'$1,900 MXN',precioNum:1900,
-      terreno:'Mixto / Sendero',tags:['mixto','versátil'],terrenoKeys:['mixto','montaña','bosque'],
+      bucket:['mixed_trail','door_to_trail'],
+      terrenoKeys:['mixto','montaña','bosque'],tags:['mixto','versátil'],terreno:'Mixto / Sendero',
       nivelKeys:['principiante','intermedio'],objetivoKeys:['entrenamiento','tecnica','distancia','5K','10K'],
-      rol:'versátil',mejorPara:'Sendero mixto con buen valor',
+      rol:'versátil',shortReason:'Versátil y accesible para sendero mixto y bosque.',
       subhead:'La opción más versátil para empezar en senderos de bosque.',
       copy:'Buen equilibrio entre tracción y comodidad para terreno mixto. Funciona en senderos variados sin ser extremo en ninguna dirección — y a precio accesible.',
       highlight:'Ideal si quieres un zapato funcional sin complicarte la elección.',
@@ -119,173 +120,178 @@ function recomendar(){
     },
     {
       nombre:'Brooks Cascadia 17',marca:'Brooks',precio:'$2,200 MXN',precioNum:2200,
-      terreno:'Mixto / Bosque',tags:['mixto','bosque','montaña'],terrenoKeys:['mixto','bosque','montaña'],
+      bucket:['mixed_trail','technical_trail'],
+      terrenoKeys:['mixto','bosque','montaña'],tags:['mixto','bosque','montaña'],terreno:'Mixto / Bosque',
       nivelKeys:['principiante','intermedio'],objetivoKeys:['entrenamiento','tecnica','distancia','5K','10K'],
-      rol:'estabilidad',mejorPara:'Estabilidad en terreno variable',
+      rol:'estabilidad',shortReason:'Versátil, estable y confiable para terreno variado.',
       subhead:'La más estable si quieres más protección en terreno variable.',
-      copy:'Tiene un balance sólido entre protección, estabilidad y adaptabilidad para terreno variable, sin sentirse extremo en una sola dirección. La favorita de corredores que quieren confianza.',
+      copy:'Balance sólido entre protección, estabilidad y adaptabilidad para terreno variable, sin sentirse extremo en una sola dirección. La favorita de corredores que quieren confianza en el pie.',
       highlight:'Ideal si buscas un solo par para empezar o para cubrir la mayoría de tus rutas.',
       metricas:{amortiguacion:3,agarre:4,estabilidad:4},distancia:'Media-larga',
       link:'https://www.amazon.com.mx/s?k=Brooks+Cascadia+17+trail'
     },
     {
       nombre:'New Balance Fresh Foam Trail',marca:'New Balance',precio:'$2,500 MXN',precioNum:2500,
-      terreno:'Larga distancia',tags:['mixto','amortiguado','larga distancia'],terrenoKeys:['montaña','mixto','roca','bosque'],
+      bucket:['mixed_trail','door_to_trail'],
+      terrenoKeys:['montaña','mixto','roca','bosque'],tags:['mixto','amortiguado','larga distancia'],terreno:'Larga distancia',
       nivelKeys:['intermedio'],objetivoKeys:['distancia','21K','51Kplus'],
-      rol:'confort',mejorPara:'Confort y tiradas largas',
+      rol:'confort',shortReason:'Más amortiguación y confort para correr más tiempo.',
       subhead:'La más cómoda para acumular kilómetros sin fatiga.',
-      copy:'Si priorizas amortiguación para salidas largas o ritmos tranquilos, esta alternativa se siente más protectora bajo el pie. Reduce fatiga en distancias largas aunque no es la más precisa para terreno muy roto.',
+      copy:'Alta amortiguación para salidas largas. Reduce fatiga en distancias largas aunque no es la más precisa para terreno muy roto.',
       highlight:'Ideal si tu prioridad es comodidad antes que agresividad.',
       metricas:{amortiguacion:5,agarre:3,estabilidad:3},distancia:'Larga',
       link:'https://www.amazon.com.mx/s?k=New+Balance+Fresh+Foam+Trail+510'
     },
     {
       nombre:'Salomon Speedcross 6',marca:'Salomon',precio:'$2,800 MXN',precioNum:2800,
-      terreno:'Barro / Terreno suelto',tags:['barro','agarre alto','técnico'],terrenoKeys:['montaña','mixto','bosque'],
+      bucket:['mud_soft_ground','technical_trail','mixed_trail'],
+      terrenoKeys:['montaña','mixto','bosque'],tags:['barro','agarre alto','técnico'],terreno:'Barro / Terreno suelto',
       nivelKeys:['principiante','intermedio','avanzado'],objetivoKeys:['competencia','entrenamiento','5K','10K','21K'],
-      rol:'agarre',mejorPara:'Barro y terreno suelto',
+      rol:'agarre',shortReason:'Tracción agresiva para terreno suelto o húmedo.',
       subhead:'La mejor si corres en barro o terreno suelto.',
-      copy:'El agarre más agresivo del grupo. Si tus rutas tienen lodo, tierra blanda o subidas sueltas, gana mucho en mordida y control sobre terreno complicado.',
+      copy:'El agarre más agresivo del grupo. Si tus rutas tienen lodo o tierra blanda, gana mucho en mordida y control sobre terreno complicado.',
       highlight:'Ideal si prefieres sentirte seguro en terreno difícil, aunque sea más específico.',
       metricas:{amortiguacion:3,agarre:5,estabilidad:3},distancia:'Corta-Media',
       link:'https://www.amazon.com.mx/s?k=Salomon+Speedcross+6'
     },
     {
       nombre:'Salomon Ultra Glide 2',marca:'Salomon',precio:'$3,100 MXN',precioNum:3100,
-      terreno:'Larga distancia / Versátil',tags:['mixto','amortiguado','versátil'],terrenoKeys:['bosque','mixto'],
+      bucket:['mixed_trail','door_to_trail'],
+      terrenoKeys:['bosque','mixto'],tags:['mixto','amortiguado','versátil'],terreno:'Larga distancia / Versátil',
       nivelKeys:['intermedio','avanzado'],objetivoKeys:['distancia','21K','entrenamiento'],
-      rol:'confort',mejorPara:'Comodidad y larga distancia',
+      rol:'confort',shortReason:'Alta amortiguación y comodidad para distancias largas en terreno moderado.',
       subhead:'La más cómoda para correr más tiempo, pero sube tu presupuesto.',
-      copy:'Alta amortiguación y versátil para terreno moderado. Se siente más protectora bajo el pie en distancias largas. No es el más ágil en terreno técnico, pero sí el más cómodo para acumular kilómetros.',
-      highlight:'Ideal si priorizas comodidad — considera que rebasa el rango de $2,000.',
+      copy:'Alta amortiguación y versátil para terreno moderado. Más protectora bajo el pie en distancias largas. No es la más ágil en técnico, pero sí la más cómoda para acumular kilómetros.',
+      highlight:'Considera que rebasa el rango de $2,000 — si puedes subir, vale la diferencia.',
       metricas:{amortiguacion:5,agarre:3,estabilidad:3},distancia:'Larga',
       link:'https://www.amazon.com.mx/s?k=Salomon+Ultra+Glide+2+trail'
     },
     {
       nombre:'Inov-8 Trailfly G 270',marca:'Inov-8',precio:'$3,200 MXN',precioNum:3200,
-      terreno:'Roca / Técnico',tags:['roca','agarre extremo','técnico'],terrenoKeys:['roca','mixto'],
+      bucket:['technical_trail','mud_soft_ground'],
+      terrenoKeys:['roca','mixto'],tags:['roca','agarre extremo','técnico'],terreno:'Roca / Técnico',
       nivelKeys:['intermedio','avanzado'],objetivoKeys:['competencia','tecnica','velocidad','10K','21K'],
-      rol:'agarre',mejorPara:'Roca seca y terreno técnico',
+      rol:'agarre',shortReason:'Suela de grafeno para agarre extremo en roca seca.',
       subhead:'La más técnica para roca y terreno duro.',
-      copy:'Suela de grafeno para agarre extremo en roca seca. Para corredores técnicos que priorizan precisión sobre terreno duro. No es la más cómoda, pero sí la más eficiente en su terreno.',
+      copy:'Suela de grafeno para agarre extremo en roca seca. Para corredores técnicos que priorizan precisión sobre terreno duro.',
       highlight:'Ideal si tus rutas tienen mucha roca y necesitas precisión.',
       metricas:{amortiguacion:2,agarre:5,estabilidad:3},distancia:'Corta-Media',
       link:'https://www.amazon.com.mx/s?k=Inov-8+Trailfly+G+270'
     },
     {
       nombre:'Hoka Speedgoat 5',marca:'Hoka',precio:'$3,800 MXN',precioNum:3800,
-      terreno:'Ultra / Distancia larga',tags:['ultra','distancia','montaña'],terrenoKeys:['montaña','mixto','bosque','roca'],
+      bucket:['technical_trail','mixed_trail','mud_soft_ground'],
+      terrenoKeys:['montaña','mixto','bosque','roca'],tags:['ultra','distancia','montaña'],terreno:'Ultra / Distancia larga',
       nivelKeys:['intermedio','avanzado'],objetivoKeys:['distancia','21K','51Kplus'],
-      rol:'confort',mejorPara:'Ultras y distancias largas',
+      rol:'confort',shortReason:'Máxima amortiguación, referencia para ultras.',
       subhead:'Máxima amortiguación para distancias largas.',
-      copy:'La referencia en amortiguación para ultras. Protege el pie en kilómetros largos sin sacrificar demasiado en tracción. Cuando la distancia acumulada es el factor limitante.',
+      copy:'La referencia en amortiguación para ultras. Protege el pie en kilómetros largos sin sacrificar demasiado en tracción.',
       highlight:'Ideal si estás entrenando para tu primer 50K o ya corres distancias largas.',
       metricas:{amortiguacion:5,agarre:4,estabilidad:4},distancia:'Larga-Ultra',
       link:'https://www.amazon.com.mx/s?k=Hoka+Speedgoat+5+trail'
     },
     {
       nombre:'HOKA Tecton X 2',marca:'Hoka',precio:'$4,800 MXN',precioNum:4800,
-      terreno:'Roca / Ultra técnico',tags:['roca','montaña','competencia'],terrenoKeys:['roca','montaña'],
+      bucket:['technical_trail'],
+      terrenoKeys:['roca','montaña'],tags:['roca','montaña','competencia'],terreno:'Roca / Ultra técnico',
       nivelKeys:['avanzado'],objetivoKeys:['competencia','51Kplus'],
-      rol:'competencia',mejorPara:'Competencia ultra técnico',
+      rol:'competencia',shortReason:'Placa de carbono para competencia en ultra técnico.',
       subhead:'Placa de carbono para competir en ultra.',
-      copy:'Placa de carbono más amortiguación máxima. Para competir, no para entrenar. Retorno de energía y protección en condiciones extremas de carrera técnica.',
+      copy:'Placa de carbono más amortiguación máxima. Para competir, no para entrenar.',
       highlight:'Ideal si ya tienes ultras y quieres mejorar tu tiempo en carrera.',
       metricas:{amortiguacion:5,agarre:4,estabilidad:4},distancia:'Ultra',
       link:'https://www.amazon.com.mx/s?k=Hoka+Tecton+X+2'
     },
     {
       nombre:'Salomon S/LAB Ultra 3',marca:'Salomon',precio:'$5,200 MXN',precioNum:5200,
-      terreno:'Ultra / Montaña',tags:['ultra','montaña','elite'],terrenoKeys:['montaña','mixto','roca'],
+      bucket:['technical_trail','mixed_trail'],
+      terrenoKeys:['montaña','mixto','roca'],tags:['ultra','montaña','elite'],terreno:'Ultra / Montaña',
       nivelKeys:['avanzado'],objetivoKeys:['competencia','51Kplus','21K'],
-      rol:'competencia',mejorPara:'Competencia elite en ultra',
+      rol:'competencia',shortReason:'El más ligero y reactivo para competencia de ultra.',
       subhead:'Edición de laboratorio para competir.',
-      copy:'El más ligero y reactivo del grupo. Para competidores que sacrifican comodidad de entrenamiento a cambio de máximo rendimiento en carrera larga.',
+      copy:'El más ligero y reactivo del grupo. Para competidores que priorizan rendimiento sobre comodidad.',
       highlight:'Ideal para corredores avanzados que priorizan ligereza sobre protección.',
       metricas:{amortiguacion:4,agarre:4,estabilidad:3},distancia:'Ultra',
       link:'https://www.amazon.com.mx/s?k=Salomon+S+LAB+Ultra+3'
     }
   ];
 
-  // Score: weighted metricas + nivel + objetivo
-  function score(z){
-    const m=z.metricas||{amortiguacion:3,agarre:3,estabilidad:3};
-    let s=m.amortiguacion*w.amortiguacion+m.agarre*w.agarre+m.estabilidad*(w.estabilidad||0.25);
-    if(z.nivelKeys.includes(level)) s+=1.5;
-    if(z.objetivoKeys.includes(objetivo)) s+=1.5;
-    else if(z.objetivoKeys.includes(objMaj)) s+=0.5;
-    return s;
+  // REGLA 6: Pickers explícitos por rol
+  function pickRecommended(pool){
+    // Más equilibrado: mejor suma de tracción + estabilidad dentro del presupuesto
+    const inBudget=pool.filter(z=>z.precioNum<=maxMXN);
+    const base=inBudget.length>=1?inBudget:pool;
+    return [...base].sort((a,b)=>
+      (b.metricas.agarre+b.metricas.estabilidad)-(a.metricas.agarre+a.metricas.estabilidad)
+    )[0];
   }
 
-  // Pool: terreno compatible, ordenado por score
-  let pool=catalogo.filter(z=>z.terrenoKeys.includes(terreno));
-  if(pool.length===0) pool=[...catalogo];
-  pool.sort((a,b)=>score(b)-score(a));
+  function pickComfort(pool, excludeNames){
+    return [...pool]
+      .filter(z=>!excludeNames.includes(z.nombre)&&budgetBadge(z)!=='fuera')
+      .sort((a,b)=>b.metricas.amortiguacion-a.metricas.amortiguacion)[0];
+  }
 
-  // Badges de rol para posiciones 2 y 3
-  const rolLabel={
-    versátil:'Más equilibrado',confort:'Más comodidad',agarre:'Más tracción',
-    estabilidad:'Más estabilidad',ligero:'Más ligero',velocidad:'Más velocidad',
-    competencia:'Para competir'
+  function pickTraction(pool, excludeNames){
+    return [...pool]
+      .filter(z=>!excludeNames.includes(z.nombre)&&budgetBadge(z)!=='fuera')
+      .sort((a,b)=>b.metricas.agarre-a.metricas.agarre)[0];
+  }
+
+  // Pool por bucket; fallback a mixed_trail si faltan candidatos
+  let pool=catalogo.filter(z=>z.bucket.includes(bucket));
+  if(pool.length<3){
+    const extras=catalogo.filter(z=>z.bucket.includes('mixed_trail')&&!pool.some(p=>p.nombre===z.nombre));
+    pool=[...pool,...extras];
+  }
+
+  const rec=pickRecommended(pool);
+  const comfort=pickComfort(pool,[rec?.nombre].filter(Boolean));
+  const traction=pickTraction(pool,[rec?.nombre,comfort?.nombre].filter(Boolean));
+
+  const roleLabels={
+    recomendado:'Mejor para ti',
+    alternativa_comoda:'Más comodidad',
+    alternativa_traccion:'Más tracción'
   };
 
-  // REGLA 1: posición 0 debe estar dentro del presupuesto
-  // REGLA 2: roles únicos entre las 3 picks
-  const picks=[];
-  const usedRoles=new Set();
-  const usedIds=new Set();
-
-  // Slot 0: mejor score que esté dentro del presupuesto
-  const primary=pool.find(z=>z.precioNum<=maxMXN);
-  if(primary){
-    picks.push({...primary,badgeLabel:'Mejor para ti',budgetBadge:'dentro'});
-    usedRoles.add(primary.rol); usedIds.add(primary.nombre);
-  } else {
-    // Sin zapatos en presupuesto: tomar el más barato disponible
-    const fallback=[...pool].sort((a,b)=>a.precioNum-b.precioNum)[0];
-    picks.push({...fallback,badgeLabel:'Mejor para ti',budgetBadge:'fuera'});
-    usedRoles.add(fallback.rol); usedIds.add(fallback.nombre);
-  }
-
-  // Slots 1 y 2: rol diferente, puede estar hasta soft max
-  for(const z of pool){
-    if(picks.length>=3) break;
-    if(usedIds.has(z.nombre)) continue;
-    if(budgetBadge(z)==='fuera') continue; // más del 10-20% sobre el límite: saltar
+  function withRole(z,role){
+    if(!z) return null;
     const badge=budgetBadge(z);
-    const label=usedRoles.has(z.rol)?'Alternativa':(rolLabel[z.rol]||'Alternativa');
-    picks.push({...z,badgeLabel:label,budgetBadge:badge});
-    usedRoles.add(z.rol); usedIds.add(z.nombre);
+    return{...z,
+      badgeLabel:roleLabels[role]||'Alternativa',
+      budgetBadge:badge,
+      rol:role
+    };
   }
 
-  // Completar si faltan (relajar restricción de rol duplicado)
-  for(const z of pool){
-    if(picks.length>=3) break;
-    if(usedIds.has(z.nombre)) continue;
-    const badge=budgetBadge(z);
-    picks.push({...z,badgeLabel:rolLabel[z.rol]||'Alternativa',budgetBadge:badge});
-    usedIds.add(z.nombre);
-  }
+  const picks=[withRole(rec,'recomendado'),withRole(comfort,'alternativa_comoda'),withRole(traction,'alternativa_traccion')]
+    .filter(Boolean);
 
-  const zapatos=picks.slice(0,3);
+  // REGLA 10: Gear por bucket
+  const gearByBucket={
+    mixed_trail:['Medias técnicas de trail (anti-ampolla)','Hidratación: botella suave 500ml mínimo'],
+    technical_trail:['Medias anti-ampolla con mejor ajuste','Hidratación: botella suave 500ml o más','Chaleco si la ruta supera 1.5h'],
+    mud_soft_ground:['Medias técnicas de secado rápido','Gaiters / polainas opcionales','Cambio de calcetas post-carrera'],
+    door_to_trail:['Medias ligeras transpirables','Botella suave 500ml']
+  };
+  let equipo=[...(gearByBucket[bucket]||gearByBucket.mixed_trail)];
 
-  // Equipo según objetivo y terreno
-  const equipo=['Medias técnicas de trail (anti-ampolla)','Hidratación: botella suave 500ml mínimo'];
   if(['21K','51Kplus'].includes(objetivo)){equipo.push('Chaleco de hidratación (2L+)','Geles energéticos / nutrición de carrera');}
   if(objetivo==='51Kplus'){equipo.push('Bastones de trail (carbono o aluminio)','Kit de emergencia (manta, silbato, linterna)');}
-  if(terreno==='roca'){equipo.push('Polainas anti-piedra');}
 
   const presupuestoLabel={'menos2000':'Menos de $2,000','2000-4000':'$2,000–$4,000','mas4000':'Más de $4,000'};
   const result={
-    zapatos:zapatos.map(z=>({
+    zapatos:picks.map(z=>({
       nombre:z.nombre,marca:z.marca,precio:z.precio,
       copy:z.copy,descripcion:z.copy,
       terreno:z.terreno,tags:z.tags,link:z.link,
       rol:z.rol,subhead:z.subhead,highlight:z.highlight,
-      mejorPara:z.mejorPara,distancia:z.distancia,metricas:z.metricas,
+      mejorPara:z.shortReason,distancia:z.distancia,metricas:z.metricas,
       badgeLabel:z.badgeLabel,budgetBadge:z.budgetBadge
     })),
-    equipo,objetivo,terreno,presupuesto:presupuestoLabel[presupuesto]||presupuesto
+    equipo,objetivo,terreno,presupuesto:presupuestoLabel[presupuesto]||presupuesto,
+    bucket
   };
   localStorage.setItem('trailResult',JSON.stringify(result));
   window.location.href='resultados.html';
