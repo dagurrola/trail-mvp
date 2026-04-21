@@ -140,8 +140,15 @@ function recomendar(){
   }
 
   let candidatos=catalogo.filter(z=>z.precioNum>=minMXN&&z.precioNum<=maxMXN&&z.terrenoKeys.includes(terreno));
-  if(candidatos.length===0) candidatos=catalogo.filter(z=>z.terrenoKeys.includes(terreno));
-  if(candidatos.length===0) candidatos=[...catalogo];
+  // Siempre mostrar 3 opciones: rellenar con terreno-match si hay menos de 3
+  if(candidatos.length<3){
+    const extras=catalogo.filter(z=>z.terrenoKeys.includes(terreno)&&!candidatos.includes(z));
+    candidatos=[...candidatos,...extras];
+  }
+  // Si aún faltan, usar todo el catálogo
+  if(candidatos.length<3){
+    candidatos=[...candidatos,...catalogo.filter(z=>!candidatos.includes(z))];
+  }
 
   candidatos.sort((a,b)=>score(b)-score(a)||a.precioNum-b.precioNum);
   const zapatos=candidatos.slice(0,3);
