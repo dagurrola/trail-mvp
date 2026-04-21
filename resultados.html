@@ -39,6 +39,10 @@ h1{font-size:1.25rem;font-weight:700;margin-bottom:8px}
 .shoe-price{font-size:1rem;font-weight:700}
 .buy-btn{display:inline-block;padding:7px 14px;background:#14532d;color:#fff;border-radius:8px;font-size:.8rem;font-weight:600;text-decoration:none}
 .buy-btn:hover{background:#166534}
+.budget-badge{display:inline-block;font-size:.68rem;font-weight:600;padding:3px 8px;border-radius:6px;margin-top:4px}
+.budget-dentro{background:#f0fdf4;color:#14532d}
+.budget-subir{background:#fef9c3;color:#854d0e}
+.budget-fuera{background:#fef2f2;color:#991b1b}
 
 /* Compare */
 .section-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:10px}
@@ -96,6 +100,13 @@ if (!data) {
         const tagList = (z.tags && z.tags.length)
             ? z.tags.map(t => `<span>${t}</span>`).join('')
             : `<span>${z.terreno || 'Trail'}</span>`;
+        const budgetBadgeMap = {
+            dentro: ['budget-dentro', 'Dentro de tu presupuesto'],
+            subir:  ['budget-subir',  'Si puedes subir un poco'],
+            fuera:  ['budget-fuera',  'Fuera de presupuesto']
+        };
+        const [budgetClass, budgetText] = budgetBadgeMap[z.budgetBadge] || ['budget-dentro', ''];
+        const budgetBadgeHtml = budgetText ? `<span class="budget-badge ${budgetClass}">${budgetText}</span>` : '';
 
         const metrics = z.metricas ? `
             <div class="shoe-metrics">
@@ -121,6 +132,7 @@ if (!data) {
                 <span class="shoe-price">${z.precio}</span>
                 ${link}
             </div>
+            ${budgetBadgeHtml}
         </article>`;
     }
 
