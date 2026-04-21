@@ -77,56 +77,116 @@ function recomendar(){
   const minMXN={'menos2000':0,'2000-4000':2000,'mas4000':4001}[presupuesto]||0;
 
   const catalogo=[
-    {nombre:'Merrell Trail Glove 7',marca:'Merrell',precio:'$1,600 MXN',precioNum:1600,
-     terreno:'Mixto / Bosque',tags:['mixto','bosque'],terrenoKeys:['mixto','bosque','montaña'],
-     nivelKeys:['principiante'],objetivoKeys:['entrenamiento','tecnica','distancia'],
-     link:'https://www.amazon.com.mx/s?k=Merrell+Trail+Glove+trail+running',
-     descripcion:'Zero-drop minimalista. Ideal para iniciarse en trail sin sobre-invertir.'},
-    {nombre:'Salomon Sense Ride 5',marca:'Salomon',precio:'$1,900 MXN',precioNum:1900,
-     terreno:'Mixto / Montaña',tags:['mixto','montaña'],terrenoKeys:['mixto','montaña','bosque'],
-     nivelKeys:['principiante','intermedio'],objetivoKeys:['entrenamiento','tecnica','distancia','5K','10K'],
-     link:'https://www.amazon.com.mx/s?k=Salomon+Sense+Ride+5+trail',
-     descripcion:'Tracción versátil y precio accesible. Buen primer zapato de trail.'},
-    {nombre:'Brooks Cascadia 17',marca:'Brooks',precio:'$2,200 MXN',precioNum:2200,
-     terreno:'Mixto / Bosque',tags:['mixto','bosque','montaña'],terrenoKeys:['mixto','bosque','montaña'],
-     nivelKeys:['principiante','intermedio'],objetivoKeys:['entrenamiento','tecnica','distancia','5K','10K'],
-     link:'https://www.amazon.com.mx/s?k=Brooks+Cascadia+17+trail',
-     descripcion:'Balance perfecto entre tracción y amortiguación. Versátil para principiantes e intermedios.'},
-    {nombre:'New Balance Fresh Foam Trail 510',marca:'New Balance',precio:'$2,500 MXN',precioNum:2500,
-     terreno:'Distancia larga',tags:['montaña','mixto','bosque'],terrenoKeys:['montaña','mixto','roca','bosque'],
-     nivelKeys:['intermedio'],objetivoKeys:['distancia','21K','51Kplus'],
-     link:'https://www.amazon.com.mx/s?k=New+Balance+Fresh+Foam+Trail+510',
-     descripcion:'Amplia amortiguación para distancias largas y terrenos variados.'},
-    {nombre:'Salomon Speedcross 6',marca:'Salomon',precio:'$2,800 MXN',precioNum:2800,
-     terreno:'Montaña / Mixto',tags:['montaña','mixto'],terrenoKeys:['montaña','mixto','bosque'],
-     nivelKeys:['principiante','intermedio','avanzado'],objetivoKeys:['competencia','entrenamiento','5K','10K','21K'],
-     link:'https://www.amazon.com.mx/s?k=Salomon+Speedcross+6',
-     descripcion:'Suela aggressive con taco profundo. Referencia en terreno blando y mixto.'},
-    {nombre:'Salomon Ultra Glide 2',marca:'Salomon',precio:'$3,100 MXN',precioNum:3100,
-     terreno:'Velocidad / Trail ligero',tags:['bosque','velocidad'],terrenoKeys:['bosque','mixto'],
-     nivelKeys:['intermedio','avanzado'],objetivoKeys:['velocidad','competencia','5K','10K'],
-     link:'https://www.amazon.com.mx/s?k=Salomon+Ultra+Glide+2+trail',
-     descripcion:'Tacos cortos para velocidad en trail ligero. Ideal para 5K y 10K de competencia.'},
-    {nombre:'Inov-8 Trailfly G 270',marca:'Inov-8',precio:'$3,200 MXN',precioNum:3200,
-     terreno:'Roca / Técnico',tags:['roca','técnico'],terrenoKeys:['roca','mixto'],
-     nivelKeys:['intermedio','avanzado'],objetivoKeys:['competencia','tecnica','velocidad','10K','21K'],
-     link:'https://www.amazon.com.mx/s?k=Inov-8+Trailfly+G+270',
-     descripcion:'Suela de grafeno para agarre extremo en roca. Para corredores técnicos.'},
-    {nombre:'Hoka Speedgoat 5',marca:'Hoka',precio:'$3,800 MXN',precioNum:3800,
-     terreno:'Ultra / Distancia',tags:['montaña','ultra','distancia'],terrenoKeys:['montaña','mixto','bosque','roca'],
-     nivelKeys:['intermedio','avanzado'],objetivoKeys:['distancia','21K','51Kplus'],
-     link:'https://www.amazon.com.mx/s?k=Hoka+Speedgoat+5+trail',
-     descripcion:'Máxima amortiguación para distancias largas. Referencia absoluta en ultras.'},
-    {nombre:'HOKA Tecton X 2',marca:'Hoka',precio:'$4,800 MXN',precioNum:4800,
-     terreno:'Roca / Ultra técnico',tags:['roca','montaña','competencia'],terrenoKeys:['roca','montaña'],
-     nivelKeys:['avanzado'],objetivoKeys:['competencia','51Kplus'],
-     link:'https://www.amazon.com.mx/s?k=Hoka+Tecton+X+2',
-     descripcion:'Placa de carbono + amortiguación máxima. Para competencia ultra técnico.'},
-    {nombre:'Salomon S/LAB Ultra 3',marca:'Salomon',precio:'$5,200 MXN',precioNum:5200,
-     terreno:'Ultra / Montaña',tags:['montaña','ultra','roca'],terrenoKeys:['montaña','mixto','roca'],
-     nivelKeys:['avanzado'],objetivoKeys:['competencia','51Kplus','21K'],
-     link:'https://www.amazon.com.mx/s?k=Salomon+S+LAB+Ultra+3',
-     descripcion:'Edición de laboratorio. Ligerísimo, respuesta máxima para competencia.'}
+    {
+      nombre:'Merrell Trail Glove 7',marca:'Merrell',precio:'$1,600 MXN',precioNum:1600,
+      terreno:'Mixto / Bosque',tags:['mixto','bosque'],terrenoKeys:['mixto','bosque','montaña'],
+      nivelKeys:['principiante'],objetivoKeys:['entrenamiento','tecnica','distancia'],
+      rol:'ligero',mejorPara:'Iniciarse sin sobre-invertir',
+      subhead:'La más ligera y accesible para empezar.',
+      copy:'Si buscas tu primer zapato de trail sin arriesgar mucho dinero, este modelo te da lo necesario para empezar: suela funcional, diseño zero-drop y un precio que no duele.',
+      highlight:'Ideal si todavía no sabes cuánto te va a gustar el trail.',
+      metricas:{amortiguacion:1,agarre:3,estabilidad:2},distancia:'Corta',
+      link:'https://www.amazon.com.mx/s?k=Merrell+Trail+Glove+trail+running'
+    },
+    {
+      nombre:'Salomon Sense Ride 5',marca:'Salomon',precio:'$1,900 MXN',precioNum:1900,
+      terreno:'Mixto / Montaña',tags:['mixto','montaña'],terrenoKeys:['mixto','montaña','bosque'],
+      nivelKeys:['principiante','intermedio'],objetivoKeys:['entrenamiento','tecnica','distancia','5K','10K'],
+      rol:'versátil',mejorPara:'Primer zapato versátil de trail',
+      subhead:'Balance sólido para empezar en trail.',
+      copy:'Una opción versátil con buena tracción para terreno mixto y precio accesible. Funciona bien en senderos variados sin ser extremo en ninguna dirección.',
+      highlight:'Ideal si quieres un zapato funcional sin complicarte la elección.',
+      metricas:{amortiguacion:2,agarre:3,estabilidad:3},distancia:'Corta-Media',
+      link:'https://www.amazon.com.mx/s?k=Salomon+Sense+Ride+5+trail'
+    },
+    {
+      nombre:'Brooks Cascadia 17',marca:'Brooks',precio:'$2,200 MXN',precioNum:2200,
+      terreno:'Mixto / Bosque',tags:['mixto','bosque','montaña'],terrenoKeys:['mixto','bosque','montaña'],
+      nivelKeys:['principiante','intermedio'],objetivoKeys:['entrenamiento','tecnica','distancia','5K','10K'],
+      rol:'versátil',mejorPara:'Uso versátil en terreno mixto',
+      subhead:'La opción más equilibrada para senderos mixtos.',
+      copy:'Si quieres un tenis confiable para casi cualquier salida de trail, esta es la opción más redonda. Tiene un balance sólido entre protección, estabilidad y adaptabilidad para terreno variable, sin sentirse extremo en una sola dirección.',
+      highlight:'Ideal si buscas un solo par para empezar o para cubrir la mayoría de tus rutas.',
+      metricas:{amortiguacion:3,agarre:4,estabilidad:4},distancia:'Media-larga',
+      link:'https://www.amazon.com.mx/s?k=Brooks+Cascadia+17+trail'
+    },
+    {
+      nombre:'New Balance Fresh Foam Trail',marca:'New Balance',precio:'$2,500 MXN',precioNum:2500,
+      terreno:'Distancia larga',tags:['mixto','amortiguado','larga distancia'],terrenoKeys:['montaña','mixto','roca','bosque'],
+      nivelKeys:['intermedio'],objetivoKeys:['distancia','21K','51Kplus'],
+      rol:'confort',mejorPara:'Confort y tiradas largas',
+      subhead:'La opción más cómoda para acumular kilómetros.',
+      copy:'Si priorizas amortiguación y confort para salidas largas o ritmos tranquilos, esta alternativa se siente más protectora bajo el pie. Va muy bien cuando el objetivo es correr más tiempo con menos fatiga, aunque no es la más precisa para terreno muy roto.',
+      highlight:'Ideal si tu prioridad es comodidad antes que agresividad.',
+      metricas:{amortiguacion:5,agarre:3,estabilidad:3},distancia:'Larga',
+      link:'https://www.amazon.com.mx/s?k=New+Balance+Fresh+Foam+Trail+510'
+    },
+    {
+      nombre:'Salomon Speedcross 6',marca:'Salomon',precio:'$2,800 MXN',precioNum:2800,
+      terreno:'Barro / Terreno suelto',tags:['barro','agarre alto','técnico'],terrenoKeys:['montaña','mixto','bosque'],
+      nivelKeys:['principiante','intermedio','avanzado'],objetivoKeys:['competencia','entrenamiento','5K','10K','21K'],
+      rol:'agarre',mejorPara:'Barro y terreno suelto',
+      subhead:'La mejor si corres en barro o terreno suelto.',
+      copy:'Si tus rutas suelen tener lodo, tierra blanda o subidas con poca tracción, esta opción ofrece el agarre más agresivo del grupo. Gana mucho en seguridad y mordida sobre terreno complicado, aunque sacrifica algo de versatilidad en superficies compactas.',
+      highlight:'Ideal si prefieres sentirte seguro en terreno difícil, aunque el tenis sea más específico.',
+      metricas:{amortiguacion:3,agarre:5,estabilidad:3},distancia:'Corta-Media',
+      link:'https://www.amazon.com.mx/s?k=Salomon+Speedcross+6'
+    },
+    {
+      nombre:'Salomon Ultra Glide 2',marca:'Salomon',precio:'$3,100 MXN',precioNum:3100,
+      terreno:'Velocidad / Trail ligero',tags:['bosque','velocidad'],terrenoKeys:['bosque','mixto'],
+      nivelKeys:['intermedio','avanzado'],objetivoKeys:['velocidad','competencia','5K','10K'],
+      rol:'velocidad',mejorPara:'Velocidad en trail ligero',
+      subhead:'La más rápida para competencias cortas.',
+      copy:'Tacos cortos y diseño ligero para maximizar velocidad en rutas técnicas cortas. Sacrifica comodidad en distancias largas a cambio de respuesta y agilidad en carrera.',
+      highlight:'Ideal para 5K y 10K de competencia donde la velocidad importa más que el confort.',
+      metricas:{amortiguacion:2,agarre:3,estabilidad:3},distancia:'Corta',
+      link:'https://www.amazon.com.mx/s?k=Salomon+Ultra+Glide+2+trail'
+    },
+    {
+      nombre:'Inov-8 Trailfly G 270',marca:'Inov-8',precio:'$3,200 MXN',precioNum:3200,
+      terreno:'Roca / Técnico',tags:['roca','agarre extremo','técnico'],terrenoKeys:['roca','mixto'],
+      nivelKeys:['intermedio','avanzado'],objetivoKeys:['competencia','tecnica','velocidad','10K','21K'],
+      rol:'agarre',mejorPara:'Roca seca y terreno técnico',
+      subhead:'La más técnica para roca y terreno duro.',
+      copy:'Suela de grafeno para agarre extremo en roca seca. Muy ligero para corredores técnicos que priorizan precisión y respuesta en terreno duro. No es el más cómodo, pero sí el más eficiente en su terreno.',
+      highlight:'Ideal si tus rutas tienen mucha roca y necesitas precisión sobre el terreno.',
+      metricas:{amortiguacion:2,agarre:5,estabilidad:3},distancia:'Corta-Media',
+      link:'https://www.amazon.com.mx/s?k=Inov-8+Trailfly+G+270'
+    },
+    {
+      nombre:'Hoka Speedgoat 5',marca:'Hoka',precio:'$3,800 MXN',precioNum:3800,
+      terreno:'Ultra / Distancia larga',tags:['ultra','distancia','montaña'],terrenoKeys:['montaña','mixto','bosque','roca'],
+      nivelKeys:['intermedio','avanzado'],objetivoKeys:['distancia','21K','51Kplus'],
+      rol:'confort',mejorPara:'Ultras y distancias largas',
+      subhead:'Máxima amortiguación para distancias largas.',
+      copy:'La referencia en amortiguación para ultras. Protege el pie en kilómetros largos sin sacrificar demasiado en tracción. Ideal cuando la distancia acumulada es el factor limitante más que el terreno específico.',
+      highlight:'Ideal si estás entrenando para tu primer 50K o ya corres distancias largas.',
+      metricas:{amortiguacion:5,agarre:4,estabilidad:4},distancia:'Larga-Ultra',
+      link:'https://www.amazon.com.mx/s?k=Hoka+Speedgoat+5+trail'
+    },
+    {
+      nombre:'HOKA Tecton X 2',marca:'Hoka',precio:'$4,800 MXN',precioNum:4800,
+      terreno:'Roca / Ultra técnico',tags:['roca','montaña','competencia'],terrenoKeys:['roca','montaña'],
+      nivelKeys:['avanzado'],objetivoKeys:['competencia','51Kplus'],
+      rol:'competencia',mejorPara:'Competencia ultra técnico',
+      subhead:'Placa de carbono para competir en ultra.',
+      copy:'Placa de carbono más amortiguación máxima. Diseñado para competir, no para entrenar. Ofrece retorno de energía y protección en condiciones extremas de carrera técnica.',
+      highlight:'Ideal si ya tienes ultras y quieres mejorar tu tiempo en carrera.',
+      metricas:{amortiguacion:5,agarre:4,estabilidad:4},distancia:'Ultra',
+      link:'https://www.amazon.com.mx/s?k=Hoka+Tecton+X+2'
+    },
+    {
+      nombre:'Salomon S/LAB Ultra 3',marca:'Salomon',precio:'$5,200 MXN',precioNum:5200,
+      terreno:'Ultra / Montaña',tags:['ultra','montaña','elite'],terrenoKeys:['montaña','mixto','roca'],
+      nivelKeys:['avanzado'],objetivoKeys:['competencia','51Kplus','21K'],
+      rol:'competencia',mejorPara:'Competencia elite en ultra',
+      subhead:'Edición de laboratorio para competir.',
+      copy:'El zapato más ligero y reactivo del grupo. Construido para competidores que sacrifican comodidad de entrenamiento a cambio de máximo rendimiento en carrera larga.',
+      highlight:'Ideal para corredores avanzados que priorizan ligereza sobre protección.',
+      metricas:{amortiguacion:4,agarre:4,estabilidad:3},distancia:'Ultra',
+      link:'https://www.amazon.com.mx/s?k=Salomon+S+LAB+Ultra+3'
+    }
   ];
 
   function score(z){
@@ -139,13 +199,14 @@ function recomendar(){
     return s;
   }
 
+  // Filtrar por presupuesto + terreno
   let candidatos=catalogo.filter(z=>z.precioNum>=minMXN&&z.precioNum<=maxMXN&&z.terrenoKeys.includes(terreno));
-  // Siempre mostrar 3 opciones: rellenar con terreno-match si hay menos de 3
+  // Rellenar hasta 3 con terreno-match sin restricción de precio
   if(candidatos.length<3){
     const extras=catalogo.filter(z=>z.terrenoKeys.includes(terreno)&&!candidatos.includes(z));
     candidatos=[...candidatos,...extras];
   }
-  // Si aún faltan, usar todo el catálogo
+  // Si aún faltan, completar con cualquier zapato
   if(candidatos.length<3){
     candidatos=[...candidatos,...catalogo.filter(z=>!candidatos.includes(z))];
   }
@@ -160,8 +221,13 @@ function recomendar(){
 
   const presupuestoLabel={'menos2000':'Menos de $2,000','2000-4000':'$2,000–$4,000','mas4000':'Más de $4,000'};
   const result={
-    zapatos:zapatos.map(z=>({nombre:z.nombre,marca:z.marca,precio:z.precio,
-      descripcion:z.descripcion,terreno:z.terreno,tags:z.tags,link:z.link})),
+    zapatos:zapatos.map(z=>({
+      nombre:z.nombre,marca:z.marca,precio:z.precio,
+      descripcion:z.descripcion||z.copy,copy:z.copy,
+      terreno:z.terreno,tags:z.tags,link:z.link,
+      rol:z.rol,subhead:z.subhead,highlight:z.highlight,
+      mejorPara:z.mejorPara,distancia:z.distancia,metricas:z.metricas
+    })),
     equipo,objetivo,terreno,presupuesto:presupuestoLabel[presupuesto]||presupuesto
   };
   localStorage.setItem('trailResult',JSON.stringify(result));
