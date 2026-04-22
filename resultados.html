@@ -62,6 +62,8 @@ h1{font-size:1.25rem;font-weight:700;margin-bottom:8px}
 .btn-back{flex:1;padding:13px;background:#fff;color:#14532d;border:1.5px solid #14532d;border-radius:10px;font-size:.875rem;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center}
 
 .no-data{text-align:center;padding:40px 20px;color:#888}
+.btn-whatsapp{flex:1;padding:13px;background:#25D366;color:#fff;border:none;border-radius:10px;font-size:.875rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-whatsapp:hover{background:#1ebe5d}
 </style>
 </head>
 <body>
@@ -179,7 +181,40 @@ if (!data) {
 
         <div class="actions">
             <a href="index.html" class="btn-back">← Volver al cuestionario</a>
+            <button id="btn-wa" class="btn-whatsapp">📲 Enviar por WhatsApp</button>
         </div>`;
+
+    function buildWhatsAppMsg() {
+        const rolLabels = {
+            versátil:'Más equilibrado', confort:'Más comodidad', agarre:'Más tracción',
+            estabilidad:'Más estabilidad', ligero:'Más ligero',
+            velocidad:'Más velocidad', competencia:'Para competir'
+        };
+        let msg = '🏃 Tus 3 opciones de tenis trail
+
+';
+        data.zapatos.forEach((z, i) => {
+            const rol = i === 0 ? 'Mejor para ti' : (rolLabels[z.rol] || 'Alternativa');
+            msg += '*' + (i+1) + '. ' + z.nombre + ' — ' + rol + '*
+';
+            if (z.subhead) msg += z.subhead + '
+';
+            msg += z.precio + '
+';
+            if (z.link) msg += '🔗 ' + z.link + '
+';
+            msg += '
+';
+        });
+        msg += '---
+Generado con Trail Shoe Coach 🌿';
+        return msg;
+    }
+
+    document.getElementById('btn-wa').addEventListener('click', function() {
+        const msg = buildWhatsAppMsg();
+        window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+    });
 }
 </script>
 </body>
