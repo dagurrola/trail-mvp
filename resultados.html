@@ -186,33 +186,26 @@ if (!data) {
 
     function buildWhatsAppMsg() {
         const rolLabels = {
-            versátil:'Más equilibrado', confort:'Más comodidad', agarre:'Más tracción',
-            estabilidad:'Más estabilidad', ligero:'Más ligero',
-            velocidad:'Más velocidad', competencia:'Para competir'
+            'vers\u00e1til':'M\u00e1s equilibrado', 'confort':'M\u00e1s comodidad', 'agarre':'M\u00e1s tracci\u00f3n',
+            'estabilidad':'M\u00e1s estabilidad', 'ligero':'M\u00e1s ligero',
+            'velocidad':'M\u00e1s velocidad', 'competencia':'Para competir'
         };
-        let msg = '🏃 Tus 3 opciones de tenis trail
-
-';
-        data.zapatos.forEach((z, i) => {
-            const rol = i === 0 ? 'Mejor para ti' : (rolLabels[z.rol] || 'Alternativa');
-            msg += '*' + (i+1) + '. ' + z.nombre + ' — ' + rol + '*
-';
-            if (z.subhead) msg += z.subhead + '
-';
-            msg += z.precio + '
-';
-            if (z.link) msg += '🔗 ' + z.link + '
-';
-            msg += '
-';
+        var lines = ['\u{1F3C3} Tus 3 opciones de tenis trail', ''];
+        data.zapatos.forEach(function(z, i) {
+            var rol = i === 0 ? 'Mejor para ti' : (rolLabels[z.rol] || 'Alternativa');
+            lines.push('*' + (i+1) + '. ' + z.nombre + ' \u2014 ' + rol + '*');
+            if (z.subhead) lines.push(z.subhead);
+            lines.push(z.precio);
+            if (z.link) lines.push('\u{1F517} ' + z.link);
+            lines.push('');
         });
-        msg += '---
-Generado con Trail Shoe Coach 🌿';
-        return msg;
+        lines.push('---');
+        lines.push('Generado con Trail Shoe Coach \u{1F33F}');
+        return lines.join('\n');
     }
 
     document.getElementById('btn-wa').addEventListener('click', function() {
-        const msg = buildWhatsAppMsg();
+        var msg = buildWhatsAppMsg();
         window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
     });
 }
