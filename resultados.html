@@ -159,10 +159,6 @@ if (!data) {
         <h1>Tus opciones para ${terr.toLowerCase()}</h1>
         <p class="subtitle">Según tu perfil, priorizamos tracción, durabilidad y valor por precio. Una opción equilibrada, una más cómoda y una con mayor agarre — para que elijas según lo que más importa en tu próxima salida.</p>
 
-        <div class="shoe-grid">
-            ${data.zapatos.map((z, i) => renderCard(z, i)).join('')}
-        </div>
-
         <p class="section-title">Comparativa rápida</p>
         <div class="compare-wrap">
             <table class="compare-table">
@@ -172,6 +168,11 @@ if (!data) {
                 </tr></thead>
                 <tbody>${data.zapatos.map(renderCompareRow).join('')}</tbody>
             </table>
+        </div>
+
+        <p class="section-title">Detalle de cada opción</p>
+        <div class="shoe-grid">
+            ${data.zapatos.map((z, i) => renderCard(z, i)).join('')}
         </div>
 
         <p class="section-title">Equipo prioritario</p>
