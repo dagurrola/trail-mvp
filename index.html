@@ -67,11 +67,11 @@ if(this.value==='competencia'){sub.innerHTML='<option value="">Seleccionar</opti
 function recomendar(){
   const terreno=document.getElementById('terrain').value;
   const presupuesto=document.getElementById('budget').value;
-  const level=document.getElementById('level').value;
+  const nivel=document.getElementById('level').value;
   const objMaj=document.getElementById('objective').value;
   const objSub=document.getElementById('objectiveSub').value;
   let objetivo=objSub||objMaj;
-  if(!level||!terreno||!presupuesto||!objetivo){alert('Por favor completa todos los campos.');return}
+  if(!nivel||!terreno||!presupuesto||!objetivo){alert('Por favor completa todos los campos.');return}
 
   // REGLA 1: Terrain buckets
   const terrainBucket={
