@@ -228,13 +228,13 @@ function recomendar(){
 
   function pickComfort(pool, excludeNames){
     return [...pool]
-      .filter(z=>!excludeNames.includes(z.nombre)&&budgetBadge(z)!=='fuera')
+      .filter(z=>!excludeNames.includes(z.nombre))
       .sort((a,b)=>b.metricas.amortiguacion-a.metricas.amortiguacion)[0];
   }
 
   function pickTraction(pool, excludeNames){
     return [...pool]
-      .filter(z=>!excludeNames.includes(z.nombre)&&budgetBadge(z)!=='fuera')
+      .filter(z=>!excludeNames.includes(z.nombre))
       .sort((a,b)=>b.metricas.agarre-a.metricas.agarre)[0];
   }
 
