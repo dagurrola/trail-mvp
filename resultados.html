@@ -209,6 +209,31 @@ if (!data) {
         var msg = buildWhatsAppMsg();
         window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
     });
+
+    // Formspree — registrar sesión silenciosamente
+    (function() {
+        try {
+            var z = data.zapatos || [];
+            var rolLabel = { recomendado:'Mejor para ti', alternativa_comoda:'Más comodidad', alternativa_traccion:'Más tracción' };
+            var payload = {
+                terreno: data.terreno || '',
+                presupuesto: data.presupuesto || '',
+                objetivo: data.objetivo || '',
+                bucket: data.bucket || '',
+                fecha: new Date().toISOString(),
+                zapato_1: z[0] ? z[0].nombre + ' — ' + (rolLabel[z[0].rol]||z[0].rol) + ' — ' + z[0].precio : '',
+                zapato_2: z[1] ? z[1].nombre + ' — ' + (rolLabel[z[1].rol]||z[1].rol) + ' — ' + z[1].precio : '',
+                zapato_3: z[2] ? z[2].nombre + ' — ' + (rolLabel[z[2].rol]||z[2].rol) + ' — ' + z[2].precio : '',
+                budget_badge_1: z[0] ? z[0].budgetBadge : '',
+                _subject: 'Trail Shoe Coach — nueva sesión (' + (data.terreno||'') + ' / ' + (data.presupuesto||'') + ')'
+            };
+            fetch('https://formspree.io/f/xrejzqow', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(function(){});
+        } catch(e) {}
+    })();
 }
 </script>
 </body>
