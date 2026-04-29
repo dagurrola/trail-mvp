@@ -237,6 +237,14 @@ if (!data) {
                 bucket: data.bucket || '',
                 nivel: data.nivel || '',
                 dispositivo: /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'móvil' : 'desktop',
+                modelo: (function(){
+                    var ua = navigator.userAgent;
+                    var m = ua.match(/iPhone|iPad/);
+                    if(m) return m[0];
+                    m = ua.match(/Android.*?;\s*([^)]+)\)/);
+                    if(m) return m[1].trim();
+                    return 'desconocido';
+                })(),
                 pantalla: screen.width + 'x' + screen.height,
                 idioma: navigator.language || '',
                 fecha: new Date().toISOString(),
