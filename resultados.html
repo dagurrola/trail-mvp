@@ -208,6 +208,21 @@ if (!data) {
     document.getElementById('btn-wa').addEventListener('click', function() {
         var msg = buildWhatsAppMsg();
         window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+        // Registrar clic en WhatsApp
+        try {
+            fetch('https://formspree.io/f/xrejzqow', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    evento: 'whatsapp_click',
+                    terreno: data.terreno || '',
+                    presupuesto: data.presupuesto || '',
+                    nivel: data.nivel || '',
+                    zapato_1: (data.zapatos[0]||{}).nombre || '',
+                    _subject: 'Trail — WhatsApp click (' + (data.terreno||'') + ' / ' + (data.presupuesto||'') + ')'
+                })
+            }).catch(function(){});
+        } catch(e) {}
     });
 
     // Formspree — registrar sesión silenciosamente
