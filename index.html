@@ -218,24 +218,31 @@ function recomendar(){
 
   // REGLA 6: Pickers explícitos por rol
   function pickRecommended(pool){
-    // Más equilibrado: mejor suma de tracción + estabilidad dentro del presupuesto
     const inBudget=pool.filter(z=>z.precioNum<=maxMXN);
-    const base=inBudget.length>=1?inBudget:pool;
-    return [...base].sort((a,b)=>
-      (b.metricas.agarre+b.metricas.estabilidad)-(a.metricas.agarre+a.metricas.estabilidad)
-    )[0];
+    if(inBudget.length>=1){
+      // Dentro del presupuesto: mejor score, desempate por precio (más caro = más especializado)
+      return [...inBudget].sort((a,b)=>
+        (b.metricas.agarre+b.metricas.estabilidad)-(a.metricas.agarre+a.metricas.estabilidad)
+        || b.precioNum-a.precioNum
+      )[0];
+    } else {
+      // Sin opciones en presupuesto: el más barato del pool (mostrará badge fuera/subir)
+      return [...pool].sort((a,b)=>a.precioNum-b.precioNum)[0];
+    }
   }
 
   function pickComfort(pool, excludeNames){
-    return [...pool]
-      .filter(z=>!excludeNames.includes(z.nombre))
-      .sort((a,b)=>b.metricas.amortiguacion-a.metricas.amortiguacion)[0];
+    const available=pool.filter(z=>!excludeNames.includes(z.nombre));
+    const inBudget=available.filter(z=>z.precioNum<=maxMXN);
+    const base=inBudget.length?inBudget:available;
+    return [...base].sort((a,b)=>b.metricas.amortiguacion-a.metricas.amortiguacion||b.precioNum-a.precioNum)[0];
   }
 
   function pickTraction(pool, excludeNames){
-    return [...pool]
-      .filter(z=>!excludeNames.includes(z.nombre))
-      .sort((a,b)=>b.metricas.agarre-a.metricas.agarre)[0];
+    const available=pool.filter(z=>!excludeNames.includes(z.nombre));
+    const inBudget=available.filter(z=>z.precioNum<=maxMXN);
+    const base=inBudget.length?inBudget:available;
+    return [...base].sort((a,b)=>b.metricas.agarre-a.metricas.agarre||b.precioNum-a.precioNum)[0];
   }
 
   // Pool por bucket; fallback a mixed_trail si faltan candidatos
