@@ -323,8 +323,17 @@ function recomendar(){
     return [...base].sort((a,b)=>b.metricas.agarre-a.metricas.agarre||b.precioNum-a.precioNum)[0];
   }
 
-  // Pool por bucket; fallback a mixed_trail si faltan candidatos
+  // Pool por bucket
   let pool=catalogo.filter(z=>z.bucket.includes(bucket));
+
+  // Si el bucket principal no tiene opciones en presupuesto, agregar en-presupuesto de cualquier bucket
+  const inBudgetFromBucket=pool.filter(z=>z.precioNum<=maxMXN);
+  if(inBudgetFromBucket.length<3){
+    const budgetAlts=catalogo.filter(z=>z.precioNum<=maxMXN&&!pool.some(p=>p.nombre===z.nombre));
+    pool=[...pool,...budgetAlts];
+  }
+
+  // Fallback general: mixed_trail si aun hay menos de 3
   if(pool.length<3){
     const extras=catalogo.filter(z=>z.bucket.includes('mixed_trail')&&!pool.some(p=>p.nombre===z.nombre));
     pool=[...pool,...extras];
