@@ -117,9 +117,14 @@ if (!data) {
                 <div class="metric-row"><span class="metric-label">Estabilidad</span><span class="metric-dots">${dots(z.metricas.estabilidad)}</span></div>
             </div>` : '';
 
-        const link = z.link
-            ? `<a class="buy-btn" href="${z.link}" target="_blank">Comprar</a>`
-            : '';
+        function getBuyLink(z) {
+              if (z.linkRunnics) return { url: z.linkRunnics, label: 'Comprar en Runnics' };
+              if (z.linkDecathlon) return { url: z.linkDecathlon, label: 'Comprar en Decathlon' };
+              if (z.link) return { url: z.link, label: 'Ver en Amazon MX' };
+              return null;
+            }
+            const _buy = getBuyLink(z);
+            const link = _buy ? `<a class="buy-btn" href="${_buy.url}" target="_blank">${_buy.label}</a>` : '';
 
         return `
         <article class="shoe-card${featured ? ' featured' : ''}">
