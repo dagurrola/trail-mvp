@@ -66,10 +66,11 @@ h1{font-size:1.25rem;font-weight:700;margin-bottom:8px}
 .btn-whatsapp:hover{background:#1ebe5d}
 
 /* ===== Prototipo C — Ver más ===== */
-#ver-mas-wrapper{text-align:center;margin:8px 0 24px}
-.btn-ver-mas{display:inline-block;padding:10px 22px;background:#f0fdf4;color:#14532d;border:1.5px solid #14532d;border-radius:10px;font-size:.85rem;font-weight:600;cursor:pointer;transition:background .18s}
-.btn-ver-mas:hover{background:#dcfce7}
-.btn-ver-mas:disabled{opacity:.45;cursor:default}
+#ver-mas-wrapper{margin:28px 0 0;padding-top:24px;border-top:2px solid #e7e7e7;text-align:center}
+#ver-mas-wrapper p{font-size:.78rem;color:#6b7280;margin-bottom:12px}
+.btn-ver-mas{display:block;width:100%;padding:14px;background:#14532d;color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .18s;letter-spacing:.01em}
+.btn-ver-mas:hover{background:#166534}
+.btn-ver-mas:disabled{opacity:.45;cursor:default;background:#6b7280}
 
 #exploracion{display:none;margin-top:4px}
 #exploracion h2{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:12px}
@@ -212,7 +213,8 @@ if (!data) {
         </div>
 
         <div id="ver-mas-wrapper">
-            <button id="btn-ver-mas" class="btn-ver-mas">Ver más opciones ↓</button>
+            <p>¿No convence ninguna? Hay más opciones para tu perfil.</p>
+            <button id="btn-ver-mas" class="btn-ver-mas">Ver más opciones →</button>
         </div>
 
         <section id="exploracion">
