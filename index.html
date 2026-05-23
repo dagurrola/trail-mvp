@@ -388,6 +388,13 @@ function recomendar(){
     bucket
   };
   localStorage.setItem('trailResult',JSON.stringify(result));
+  // Prototipo C — guardar contexto wizard + catálogo completo para exploración
+  localStorage.setItem('wizard_terreno', terreno);
+  localStorage.setItem('wizard_bucket', bucket);
+  localStorage.setItem('wizard_presupuesto', presupuesto);
+  localStorage.setItem('wizard_presupuesto_num', String(maxMXN));
+  localStorage.setItem('wizard_nivel', nivel);
+  localStorage.setItem('trailCatalogo', JSON.stringify(catalogo));
   window.location.href='resultados.html';
 }
 </script>

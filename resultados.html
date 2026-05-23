@@ -64,6 +64,27 @@ h1{font-size:1.25rem;font-weight:700;margin-bottom:8px}
 .no-data{text-align:center;padding:40px 20px;color:#888}
 .btn-whatsapp{flex:1;padding:13px;background:#25D366;color:#fff;border:none;border-radius:10px;font-size:.875rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
 .btn-whatsapp:hover{background:#1ebe5d}
+
+/* ===== Prototipo C — Ver más ===== */
+#ver-mas-wrapper{text-align:center;margin:8px 0 24px}
+.btn-ver-mas{display:inline-block;padding:10px 22px;background:#f0fdf4;color:#14532d;border:1.5px solid #14532d;border-radius:10px;font-size:.85rem;font-weight:600;cursor:pointer;transition:background .18s}
+.btn-ver-mas:hover{background:#dcfce7}
+.btn-ver-mas:disabled{opacity:.45;cursor:default}
+
+#exploracion{display:none;margin-top:4px}
+#exploracion h2{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:12px}
+
+.filtros-exp{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;padding:14px;background:#fff;border:1px solid #e7e7e7;border-radius:12px}
+.filtro-grupo{display:flex;flex-direction:column;gap:4px;min-width:140px;flex:1}
+.filtro-grupo label{font-size:.7rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.04em}
+.filtro-grupo select{padding:6px 8px;border:1px solid #d1d5db;border-radius:7px;font-size:.82rem;background:#fff}
+.filtro-grupo input[type=range]{margin-top:4px;accent-color:#14532d}
+.presupuesto-val{font-size:.78rem;color:#374151;font-weight:600}
+
+#cards-exploracion{display:grid;gap:14px}
+#msg-vacio-exp{text-align:center;font-style:italic;color:#888;padding:20px 0;display:none}
+
+@media(max-width:600px){.filtros-exp{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -188,7 +209,43 @@ if (!data) {
         <div class="actions">
             <a href="index.html" class="btn-back">← Volver al cuestionario</a>
             <button id="btn-wa" class="btn-whatsapp">📲 Enviar por WhatsApp</button>
-        </div>`;
+        </div>
+
+        <div id="ver-mas-wrapper">
+            <button id="btn-ver-mas" class="btn-ver-mas">Ver más opciones ↓</button>
+        </div>
+
+        <section id="exploracion">
+            <h2>Más opciones para tu perfil</h2>
+            <div class="filtros-exp" id="filtros-exp">
+                <div class="filtro-grupo">
+                    <label for="filtro-terreno">Terreno</label>
+                    <select id="filtro-terreno">
+                        <option value="">Cualquiera</option>
+                        <option value="montaña">Montaña</option>
+                        <option value="mixto">Mixto / Bosque</option>
+                        <option value="barro">Barro / Tierra suelta</option>
+                        <option value="bosque">Bosque</option>
+                        <option value="roca">Roca / Técnico</option>
+                    </select>
+                </div>
+                <div class="filtro-grupo">
+                    <label for="filtro-nivel">Nivel</label>
+                    <select id="filtro-nivel">
+                        <option value="">Cualquiera</option>
+                        <option value="principiante">Principiante</option>
+                        <option value="intermedio">Intermedio</option>
+                        <option value="avanzado">Avanzado</option>
+                    </select>
+                </div>
+                <div class="filtro-grupo">
+                    <label for="filtro-presupuesto">Presupuesto máximo: <span class="presupuesto-val" id="presupuesto-val">$5,200 MXN</span></label>
+                    <input type="range" id="filtro-presupuesto" min="1600" max="5200" step="200">
+                </div>
+            </div>
+            <div id="cards-exploracion"></div>
+            <p id="msg-vacio-exp">No hay opciones con estos filtros. Intenta ampliar el presupuesto o cambiar el terreno.</p>
+        </section>`;
 
     function buildWhatsAppMsg() {
         const rolLabels = {
@@ -229,6 +286,144 @@ if (!data) {
             }).catch(function(){});
         } catch(e) {}
     });
+
+    // ========== Prototipo C — Exploración ==========
+    (function() {
+        var btnVerMas = document.getElementById('btn-ver-mas');
+        var seccion = document.getElementById('exploracion');
+        var filtroTerreno = document.getElementById('filtro-terreno');
+        var filtroNivel = document.getElementById('filtro-nivel');
+        var filtroPresupuesto = document.getElementById('filtro-presupuesto');
+        var presupuestoVal = document.getElementById('presupuesto-val');
+        var cardsExp = document.getElementById('cards-exploracion');
+        var msgVacio = document.getElementById('msg-vacio-exp');
+
+        var catalogoRaw = localStorage.getItem('trailCatalogo');
+        if (!catalogoRaw || !btnVerMas) return;
+        var CATALOGO = JSON.parse(catalogoRaw);
+
+        // Pre-cargar filtros con valores del wizard
+        var wTerreno = localStorage.getItem('wizard_terreno') || '';
+        var wNivel = localStorage.getItem('wizard_nivel') || '';
+        var wMaxNum = parseInt(localStorage.getItem('wizard_presupuesto_num') || '4000', 10);
+        var wBucket = localStorage.getItem('wizard_bucket') || '';
+
+        filtroTerreno.value = wTerreno;
+        filtroNivel.value = wNivel;
+        var initMax = Math.min(wMaxNum > 1600 ? wMaxNum : 5200, 5200);
+        filtroPresupuesto.value = initMax;
+        presupuestoVal.textContent = '$' + initMax.toLocaleString('es-MX') + ' MXN';
+
+        // Nombres de las 3 picks ya mostradas (para marcarlas)
+        var picksNames = (data && data.zapatos) ? data.zapatos.map(function(z) { return z.nombre; }) : [];
+
+        function scoreZapato(z) {
+            var s = 0;
+            // Coincidencia de bucket → máxima relevancia
+            if (wBucket && z.bucket && z.bucket.includes(wBucket)) s += 10;
+            // Nivel match
+            if (wNivel && z.nivelKeys && z.nivelKeys.includes(wNivel)) s += 4;
+            // Calidad intrínseca (agarre + estabilidad)
+            if (z.metricas) s += (z.metricas.agarre || 0) + (z.metricas.estabilidad || 0);
+            return s;
+        }
+
+        function fmt(n) { return '$' + n.toLocaleString('es-MX') + ' MXN'; }
+
+        function filtrarYRenderizar() {
+            var terr = filtroTerreno.value;
+            var niv = filtroNivel.value;
+            var maxP = parseInt(filtroPresupuesto.value, 10);
+
+            var lista = CATALOGO.filter(function(z) {
+                if (terr && (!z.terrenoKeys || !z.terrenoKeys.includes(terr))) return false;
+                if (niv && (!z.nivelKeys || !z.nivelKeys.includes(niv))) return false;
+                if (z.precioNum > maxP) return false;
+                return true;
+            });
+
+            lista.sort(function(a, b) { return scoreZapato(b) - scoreZapato(a); });
+
+            cardsExp.innerHTML = '';
+            if (lista.length === 0) {
+                msgVacio.style.display = 'block';
+                return;
+            }
+            msgVacio.style.display = 'none';
+
+            lista.forEach(function(z) {
+                var isTop = picksNames.includes(z.nombre);
+                var topBadge = isTop ? '<span class="shoe-badge alt" style="font-size:.65rem">Ya en tus 3 opciones</span>' : '';
+                var m = z.metricas || {};
+                function dots(n) {
+                    n = Math.min(Math.max(Math.round(n||0), 0), 5);
+                    return '<span style="color:#14532d">' + '●'.repeat(n) + '</span>' +
+                           '<span style="color:#d1d5db">' + '○'.repeat(5-n) + '</span>';
+                }
+                var card = document.createElement('article');
+                card.className = 'shoe-card' + (isTop ? '' : '');
+                card.innerHTML = topBadge +
+                    '<h3>' + z.nombre + '</h3>' +
+                    '<p class="shoe-subhead">' + (z.subhead || z.terreno || '') + '</p>' +
+                    '<div class="shoe-tags">' + (z.tags||[]).map(function(t){return '<span>'+t+'</span>';}).join('') + '</div>' +
+                    '<p class="shoe-copy">' + (z.copy || '') + '</p>' +
+                    (m ? '<div class="shoe-metrics">' +
+                        '<div class="metric-row"><span class="metric-label">Amortiguación</span><span class="metric-dots">' + dots(m.amortiguacion) + '</span></div>' +
+                        '<div class="metric-row"><span class="metric-label">Agarre</span><span class="metric-dots">' + dots(m.agarre) + '</span></div>' +
+                        '<div class="metric-row"><span class="metric-label">Estabilidad</span><span class="metric-dots">' + dots(m.estabilidad) + '</span></div>' +
+                    '</div>' : '') +
+                    '<div class="shoe-price-row"><span class="shoe-price">' + fmt(z.precioNum) + '</span>' +
+                    (z.link ? '<a class="buy-btn" href="' + z.link + '" target="_blank" rel="noopener" data-zapato="' + z.nombre + '">Comprar</a>' : '') +
+                    '</div>';
+
+                // Track click en tienda desde exploración
+                var buyBtn = card.querySelector('.buy-btn');
+                if (buyBtn) {
+                    buyBtn.addEventListener('click', function() {
+                        try {
+                            fetch('https://formspree.io/f/xrejzqow', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                                body: JSON.stringify({
+                                    evento: 'exploracion_compra_click',
+                                    version: 'C',
+                                    zapato: z.nombre,
+                                    filtro_terreno: filtroTerreno.value,
+                                    filtro_nivel: filtroNivel.value,
+                                    filtro_presupuesto: filtroPresupuesto.value,
+                                    _subject: 'Trail — Exploración click (' + z.nombre + ')'
+                                })
+                            }).catch(function(){});
+                        } catch(e) {}
+                    });
+                }
+
+                cardsExp.appendChild(card);
+            });
+        }
+
+        btnVerMas.addEventListener('click', function() {
+            seccion.style.display = 'block';
+            btnVerMas.disabled = true;
+            btnVerMas.textContent = 'Más opciones ↓';
+            filtrarYRenderizar();
+            // Track apertura de exploración
+            try {
+                fetch('https://formspree.io/f/xrejzqow', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ evento: 'ver_mas_click', version: 'C', terreno: wTerreno, nivel: wNivel, _subject: 'Trail — Ver más click' })
+                }).catch(function(){});
+            } catch(e) {}
+        });
+
+        filtroTerreno.addEventListener('change', function() { if (seccion.style.display !== 'none') filtrarYRenderizar(); });
+        filtroNivel.addEventListener('change', function() { if (seccion.style.display !== 'none') filtrarYRenderizar(); });
+        filtroPresupuesto.addEventListener('input', function(e) {
+            presupuestoVal.textContent = '$' + parseInt(e.target.value).toLocaleString('es-MX') + ' MXN';
+            if (seccion.style.display !== 'none') filtrarYRenderizar();
+        });
+    })();
 
     // Formspree — registrar sesión silenciosamente
     (function() {
