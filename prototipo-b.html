@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trail Shoe Analytics Coach</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .filters-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .filter-group {
+            margin-bottom: 25px;
+        }
+        
+        .filter-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .filter-icon {
+            font-size: 1.2em;
+        }
+        
+        select, input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.95em;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus, input[type="range"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        input[type="checkbox"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+        
+        .checkbox-item label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 0.95em;
+            color: #555;
+        }
+        
+        .reset-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+        
+        .reset-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .results-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        
+        .shoe-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #667eea;
+        }
+        
+        .shoe-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .shoe-card.featured {
+            border-left: 5px solid #f39c12;
+            background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+        }
+        
+        .shoe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+        
+        .shoe-name {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .shoe-price {
+            background: #667eea;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            margin-right: 5px;
+        }
+        
+        .badge.category {
+            background: #e8eaf6;
+            color: #667eea;
+        }
+        
+        .badge.featured-badge {
+            background: #fff3e0;
+            color: #f39c12;
+        }
+        
+        .spec-row {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .spec-row:last-child {
+            border-bottom: none;
+        }
+        
+        .spec-label {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.9em;
+        }
+        
+        .spec-value {
+            color: #555;
+            font-size: 0.95em;
+        }
+        
+        .stars {
+            display: inline-flex;
+            color: #f39c12;
+            font-size: 0.9em;
+            gap: 2px;
+        }
+        
+        .review-source {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            color: #999;
+            grid-column: 1 / -1;
+        }
+        
+        .stats {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 0.85em;
+            color: #999;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-panel {
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏃 Trail Shoe Analytics Coach</h1>
+            <p class="subtitle">Filtrador inteligente de tenis de trail running 2026</p>
+        </header>
+        
+        <div class="main-grid">
+            <!-- FILTERS PANEL -->
+            <div class="filters-panel">
+                <h2 style="margin-bottom: 20px; font-size: 1.1em;">Filtra por tus criterios</h2>
+                
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <span class="filter-icon">📏</span>
+                        Distancia típica
+                    </label>
+                    <select id="distance">
+                        <option value="">Todas</option>
+                        <option value="5-10K">5-10K (speed)</option>
+                        <option value="10-25K">10-25K (mixed)</option>
+                        <option value="25-50K">25-50K (long)</option>
+                        <option value="50K+">50K+ (ultra)</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <span class="filter-icon">🪨</span>
+                        Tipo de terreno
+                    </label>
+                    <select id="terrain">
+                        <option value="">Todos</option>
+                        <option value="rocky">Rocky / Técnico</option>
+                        <option value="mixed">Mixed / Singletrack</option>
+                        <option value="gravel">Gravel / Smooth</option>
+                        <option value="versatile">Versátil (todoterreno)</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <span class="filter-icon">⚖️</span>
+                        Peso máximo (g)
+                    </label>
+                    <input type="range" id="weight" min="250" max="400" value="400" step="10">
+                    <div style="font-size: 0.85em; color: #667eea; margin-top: 5px; font-weight: 600;">
+                        Hasta <span id="weightValue">400</span>g
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <span class="filter-icon">💰</span>
+                        Rango de precio USD
+                    </label>
+                    <select id="price">
+                        <option value="">Todos</option>
+                        <option value="100-150">$100-150 (Budget)</option>
+                        <option value="150-200">$150-200 (Mid)</option>
+                        <option value="200+">$200+ (Premium)</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">
+                        <span class="filter-icon">🎯</span>
+                        Prioridad
+                    </label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="traction" value="traction">
+                            <label for="traction">Máximo agarre</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cushion" value="cushion">
+                            <label for="cushion">Máxima comodidad</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="lightweight" value="lightweight">
+                            <label for="lightweight">Ultraligero</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="stability" value="stability">
+                            <label for="stability">Máx. estabilidad</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="value" value="value">
+                            <label for="value">Mejor precio/rendimiento</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="reset-btn" onclick="resetFilters()">↺ Reiniciar filtros</button>
+            </div>
+            
+            <!-- RESULTS -->
+            <div>
+                <div class="stats" id="stats"></div>
+                <div class="results-container" id="results"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const shoes = [
+            {
+                name: "Saucony Peregrine 16",
+                price: 150,
+                category: "All-Mountain",
+                distance: "10-25K",
+                terrain: ["rocky", "mixed", "versatile"],
+                weight: 300,
+                cushion: "28/24",
+                traction: 5,
+                stability: 4,
+                fit: "True-to-size, medio",
+                features: ["Vibram outsole", "Versátil", "Técnico+pavement"],
+                pros: ["Mejor todoterreno", "Versátil", "Actualizado 2026"],
+                cons: ["Promedio en todo"],
+                featured: true,
+                reviews: ["iRunFar", "OutdoorGearLab", "TrailAndKale"],
+                tags: ["traction", "stability"]
+            },
+            {
+                name: "Hoka Speedgoat 7",
+                price: 160,
+                category: "Ultra/Distancia",
+                distance: "25-50K",
+                terrain: ["mixed", "versatile"],
+                weight: 315,
+                cushion: "36/32",
+                traction: 4,
+                stability: 3,
+                fit: "Cómodo, ancho",
+                features: ["Máxima amortiguación", "Largo recorrido"],
+                pros: ["Máximo confort", "Excelente fit ancho"],
+                cons: ["Menos técnico", "Pesado"],
+                featured: true,
+                reviews: ["iRunFar", "OutdoorGearLab"],
+                tags: ["cushion", "stability"]
+            },
+            {
+                name: "La Sportiva Prodigio Pro",
+                price: 225,
+                category: "Técnico/Racing",
+                distance: "5-10K",
+                terrain: ["rocky"],
+                weight: 280,
+                cushion: "20/24",
+                traction: 5,
+                stability: 5,
+                fit: "Snug, true-to-size",
+                features: ["Carreras", "Máximo técnico", "Vibram premium"],
+                pros: ["Mejor traction", "Muy técnico", "Ligero"],
+                cons: ["No cómodo", "Caro", "Racing only"],
+                featured: false,
+                reviews: ["iRunFar", "OutdoorGearLab"],
+                tags: ["traction", "lightweight"]
+            },
+            {
+                name: "Hoka Torrent 4",
+                price: 135,
+                category: "All-Mountain",
+                distance: "10-25K",
+                terrain: ["mixed", "versatile"],
+                weight: 310,
+                cushion: "32",
+                traction: 4,
+                stability: 3,
+                fit: "Cómodo, true-to-size",
+                features: ["Mejor precio/rendimiento", "Road-to-trail"],
+                pros: ["Muy económico", "Buen todoterreno"],
+                cons: ["Menos técnico", "Pesado"],
+                featured: false,
+                reviews: ["iRunFar", "OutdoorGearLab"],
+                tags: ["value"]
+            },
+            {
+                name: "Craft Nordlite Ultra 2.0",
+                price: 180,
+                category: "Road-to-Trail",
+                distance: "5-10K",
+                terrain: ["gravel", "mixed"],
+                weight: 290,
+                cushion: "30",
+                traction: 3,
+                stability: 3,
+                fit: "Cómodo, generoso",
+                features: ["Transición", "Gravel-friendly"],
+                pros: ["Muy cómodo", "Road-like"],
+                cons: ["No muy técnico"],
+                featured: false,
+                reviews: ["OutsideOnline"],
+                tags: ["lightweight"]
+            },
+            {
+                name: "Altra Lone Peak 9",
+                price: 130,
+                category: "Budget All-Mountain",
+                distance: "10-25K",
+                terrain: ["mixed", "versatile"],
+                weight: 390,
+                cushion: "25",
+                traction: 3,
+                stability: 2,
+                fit: "MUY ancho, zero-drop",
+                features: ["Presupuesto", "Ancho máximo"],
+                pros: ["Muy económico", "Muy ancho"],
+                cons: ["Pesado", "Lug wear rápido", "Sloppy"],
+                featured: false,
+                reviews: ["Switchback Travel"],
+                tags: ["value"]
+            },
+            {
+                name: "Nnormal Kjerag 02",
+                price: 220,
+                category: "Técnico Puro",
+                distance: "10-25K",
+                terrain: ["rocky"],
+                weight: 285,
+                cushion: "19",
+                traction: 5,
+                stability: 5,
+                fit: "Snug, wide sensitive",
+                features: ["Rock-sticky", "Approach-shoe like"],
+                pros: ["Máximo grip roca", "Muy técnico"],
+                cons: ["Poco confort", "Caro", "Fit snug"],
+                featured: false,
+                reviews: ["BetterTrail"],
+                tags: ["traction", "stability"]
+            },
+            {
+                name: "Salomon Speedcross 6",
+                price: 150,
+                category: "Road-to-Trail",
+                distance: "5-10K",
+                terrain: ["gravel", "mixed"],
+                weight: 305,
+                cushion: "22",
+                traction: 4,
+                stability: 3,
+                fit: "True-to-size",
+                features: ["Veloz", "Versatilidad"],
+                pros: ["Ágil", "Buen precio"],
+                cons: ["Poco confort largo"],
+                featured: false,
+                reviews: ["Switchback Travel"],
+                tags: ["traction"]
+            }
+        ];
+        
+        function renderShoes(filtered) {
+            const results = document.getElementById('results');
+            const stats = document.getElementById('stats');
+            
+            if (filtered.length === 0) {
+                results.innerHTML = '<div class="no-results">No hay tenis que coincidan con tus filtros. Intenta ajustarlos.</div>';
+                stats.innerHTML = '';
+                return;
+            }
+            
+            // Calculate stats
+            const avgPrice = (filtered.reduce((a, b) => a + b.price, 0) / filtered.length).toFixed(0);
+            const avgWeight = (filtered.reduce((a, b) => a + b.weight, 0) / filtered.length).toFixed(0);
+            const featured = filtered.filter(s => s.featured).length;
+            
+            stats.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-number">${filtered.length}</div>
+                    <div class="stat-label">Resultados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">$${avgPrice}</div>
+                    <div class="stat-label">Precio Promedio</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${avgWeight}g</div>
+                    <div class="stat-label">Peso Promedio</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${featured}</div>
+                    <div class="stat-label">Top Picks</div>
+                </div>
+            `;
+            
+            results.innerHTML = filtered.map(shoe => `
+                <div class="shoe-card ${shoe.featured ? 'featured' : ''}">
+                    ${shoe.featured ? '<span class="badge featured-badge">🏆 TOP PICK</span>' : ''}
+                    <span class="badge category">${shoe.category}</span>
+                    
+                    <div class="shoe-header">
+                        <div class="shoe-name">${shoe.name}</div>
+                        <div class="shoe-price">$${shoe.price}</div>
+                    </div>
+                    
+                    <div class="spec-row">
+                        <div class="spec-label">Distancia</div>
+                        <div class="spec-value">${shoe.distance}</div>
+                    </div>
+                    
+                    <div class="spec-row">
+                        <div class="spec-label">Terreno</div>
+                        <div class="spec-value">${shoe.terrain.join(', ')}</div>
+                    </div>
+                    
+                    <div class="spec-row">
+                        <div class="spec-label">Peso</div>
+                        <div class="spec-value">${shoe.weight}g</div>
+                    </div>
+                    
+                    <div class="spec-row">
+                        <div class="spec-label">Amortiguación</div>
+                        <div class="spec-value">${shoe.cushion}mm</div>
+                    </div>
+                    
+                    <div class="spec-row">
+                        <div class="spec-label">Traction</div>
+                        <div class="spec-value"><span class="stars">${'★'.repeat(shoe.traction)}${'☆'.repeat(5-shoe.traction)}</span></div>
+                    </div>
+                    
+                    <div class="spec-row">
+                        <div class="spec-label">Estabilidad</div>
+                        <div class="spec-value"><span class="stars">${'★'.repeat(shoe.stability)}${'☆'.repeat(5-shoe.stability)}</span></div>
+                    </div>
+                    
+                    <div class="spec-row">
+                        <div class="spec-label">Fit</div>
+                        <div class="spec-value">${shoe.fit}</div>
+                    </div>
+                    
+                    <div style="padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
+                        <strong style="font-size: 0.9em; color: #333;">Pros:</strong>
+                        <div style="font-size: 0.85em; color: #27ae60; margin-top: 4px;">✓ ${shoe.pros.join(' • ')}</div>
+                    </div>
+                    
+                    <div style="padding: 10px 0; margin-bottom: 10px;">
+                        <strong style="font-size: 0.9em; color: #333;">Contras:</strong>
+                        <div style="font-size: 0.85em; color: #e74c3c; margin-top: 4px;">✗ ${shoe.cons.join(' • ')}</div>
+                    </div>
+                    
+                    <div class="review-source">
+                        <strong style="font-size: 0.8em;">Reviews en:</strong> ${shoe.reviews.join(', ')}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function filterShoes() {
+            const distance = document.getElementById('distance').value;
+            const terrain = document.getElementById('terrain').value;
+            const weight = parseInt(document.getElementById('weight').value);
+            const price = document.getElementById('price').value;
+            
+            const priorities = [];
+            if (document.getElementById('traction').checked) priorities.push('traction');
+            if (document.getElementById('cushion').checked) priorities.push('cushion');
+            if (document.getElementById('lightweight').checked) priorities.push('lightweight');
+            if (document.getElementById('stability').checked) priorities.push('stability');
+            if (document.getElementById('value').checked) priorities.push('value');
+            
+            let filtered = shoes;
+            
+            if (distance) {
+                filtered = filtered.filter(s => s.distance === distance);
+            }
+            
+            if (terrain) {
+                filtered = filtered.filter(s => s.terrain.includes(terrain));
+            }
+            
+            filtered = filtered.filter(s => s.weight <= weight);
+            
+            if (price) {
+                const [min, max] = price.split('-').map(Number);
+                filtered = filtered.filter(s => s.price >= min && s.price <= (max || 9999));
+            }
+            
+            if (priorities.length > 0) {
+                filtered = filtered.filter(s => priorities.some(p => s.tags.includes(p)));
+            }
+            
+            // Sort: featured first, then by best rating
+            filtered.sort((a, b) => {
+                if (b.featured - a.featured !== 0) return b.featured - a.featured;
+                return (b.traction + b.stability) - (a.traction + a.stability);
+            });
+            
+            renderShoes(filtered);
+        }
+        
+        function resetFilters() {
+            document.getElementById('distance').value = '';
+            document.getElementById('terrain').value = '';
+            document.getElementById('weight').value = 400;
+            document.getElementById('price').value = '';
+            document.getElementById('weightValue').textContent = '400';
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            filterShoes();
+        }
+        
+        // Event listeners
+        document.getElementById('distance').addEventListener('change', filterShoes);
+        document.getElementById('terrain').addEventListener('change', filterShoes);
+        document.getElementById('weight').addEventListener('input', e => {
+            document.getElementById('weightValue').textContent = e.target.value;
+            filterShoes();
+        });
+        document.getElementById('price').addEventListener('change', filterShoes);
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            cb.addEventListener('change', filterShoes);
+        });
+        
+        // Initial render
+        filterShoes();
+    </script>
+</body>
+</html>
