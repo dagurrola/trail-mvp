@@ -79,7 +79,9 @@ h1{font-size:1.25rem;font-weight:700;margin-bottom:8px}
 .filtro-grupo{display:flex;flex-direction:column;gap:4px;min-width:140px;flex:1}
 .filtro-grupo label{font-size:.7rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.04em}
 .filtro-grupo select{padding:6px 8px;border:1px solid #d1d5db;border-radius:7px;font-size:.82rem;background:#fff}
-.filtro-grupo input[type=range]{margin-top:4px;accent-color:#14532d}
+.filtro-grupo input[type=range]{-webkit-appearance:none;width:100%;height:2.4rem;background:transparent;margin-top:4px}
+.filtro-grupo input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:1.8rem;height:1.8rem;border-radius:50%;background:#14532d;cursor:pointer;margin-top:-.7rem}
+.filtro-grupo input[type=range]::-webkit-slider-runnable-track{width:100%;height:.5rem;background:#d1d5db;border-radius:4px}
 .presupuesto-val{font-size:.78rem;color:#374151;font-weight:600}
 
 #cards-exploracion{display:grid;gap:14px}
@@ -375,7 +377,7 @@ if (!data) {
                         '<div class="metric-row"><span class="metric-label">Estabilidad</span><span class="metric-dots">' + dots(m.estabilidad) + '</span></div>' +
                     '</div>' : '') +
                     '<div class="shoe-price-row"><span class="shoe-price">' + fmt(z.precioNum) + '</span>' +
-                    (z.link ? '<a class="buy-btn" href="' + z.link + '" target="_blank" rel="noopener" data-zapato="' + z.nombre + '">Comprar</a>' : '') +
+                    (function(){var u=z.linkRunnics||z.linkDecathlon||z.link;var lb=z.linkRunnics?'Comprar en Runnics':z.linkDecathlon?'Comprar en Decathlon':'Ver en Amazon MX';return u?'<a class="buy-btn" href="'+u+'" target="_blank" rel="noopener" data-zapato="'+z.nombre+'">'+lb+'</a>':'';}()) +
                     '</div>';
 
                 // Track click en tienda desde exploración
