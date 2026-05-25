@@ -3,712 +3,404 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trail Shoe Analytics Coach</title>
+    <title>Trail Shoe Coach — Explorador</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-        }
-        
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .subtitle {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-        
-        .main-grid {
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-        
-        .filters-panel {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            height: fit-content;
-            position: sticky;
-            top: 20px;
-        }
-        
-        .filter-group {
-            margin-bottom: 25px;
-        }
-        
-        .filter-group:last-child {
-            margin-bottom: 0;
-        }
-        
-        .filter-label {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 0.95em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .filter-icon {
-            font-size: 1.2em;
-        }
-        
-        select, input[type="range"] {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 0.95em;
-            transition: border-color 0.3s;
-        }
-        
-        select:focus, input[type="range"]:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-        
-        input[type="checkbox"] {
-            cursor: pointer;
-            width: 18px;
-            height: 18px;
-            accent-color: #667eea;
-        }
-        
-        .checkbox-item label {
-            cursor: pointer;
-            flex: 1;
-            font-size: 0.95em;
-            color: #555;
-        }
-        
-        .reset-btn {
-            width: 100%;
-            padding: 12px;
-            background: #f5f5f5;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #666;
-            transition: all 0.3s;
-        }
-        
-        .reset-btn:hover {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-        
-        .results-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-        }
-        
-        .shoe-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            border-left: 5px solid #667eea;
-        }
-        
-        .shoe-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-        }
-        
-        .shoe-card.featured {
-            border-left: 5px solid #f39c12;
-            background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
-        }
-        
-        .shoe-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 15px;
-        }
-        
-        .shoe-name {
-            font-size: 1.3em;
-            font-weight: 700;
-            color: #333;
-        }
-        
-        .shoe-price {
-            background: #667eea;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 0.9em;
-            font-weight: 600;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            font-weight: 600;
-            margin-bottom: 10px;
-            margin-right: 5px;
-        }
-        
-        .badge.category {
-            background: #e8eaf6;
-            color: #667eea;
-        }
-        
-        .badge.featured-badge {
-            background: #fff3e0;
-            color: #f39c12;
-        }
-        
-        .spec-row {
-            display: grid;
-            grid-template-columns: 120px 1fr;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .spec-row:last-child {
-            border-bottom: none;
-        }
-        
-        .spec-label {
-            font-weight: 600;
-            color: #667eea;
-            font-size: 0.9em;
-        }
-        
-        .spec-value {
-            color: #555;
-            font-size: 0.95em;
-        }
-        
-        .stars {
-            display: inline-flex;
-            color: #f39c12;
-            font-size: 0.9em;
-            gap: 2px;
-        }
-        
-        .review-source {
-            font-size: 0.8em;
-            color: #999;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #f0f0f0;
-        }
-        
-        .no-results {
-            text-align: center;
-            padding: 40px;
-            background: white;
-            border-radius: 12px;
-            color: #999;
-            grid-column: 1 / -1;
-        }
-        
-        .stats {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 2em;
-            font-weight: 700;
-            color: #667eea;
-        }
-        
-        .stat-label {
-            font-size: 0.85em;
-            color: #999;
-            text-transform: uppercase;
-            margin-top: 5px;
-        }
-        
-        @media (max-width: 1024px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .filters-panel {
-                position: relative;
-                top: 0;
-            }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;min-height:100vh;padding:20px;color:#1a1a1a}
+        .container{max-width:1400px;margin:0 auto}
+
+        header{background:#14532d;color:#fff;border-radius:14px;padding:24px 28px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+        header h1{font-size:1.25rem;font-weight:700}
+        header p{font-size:.82rem;opacity:.85;margin-top:4px}
+        .header-link{font-size:.78rem;color:#86efac;text-decoration:none;white-space:nowrap}
+        .header-link:hover{color:#fff}
+
+        .main-grid{display:grid;grid-template-columns:300px 1fr;gap:24px;margin-bottom:40px}
+
+        /* FILTERS */
+        .filters-panel{background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.08);height:fit-content;position:sticky;top:20px;border-top:4px solid #14532d}
+        .filters-panel h2{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;margin-bottom:16px}
+        .filter-group{margin-bottom:18px}
+        .filter-group:last-of-type{margin-bottom:0}
+        .filter-label{font-weight:600;color:#374151;margin-bottom:7px;font-size:.82rem;display:flex;align-items:center;gap:5px}
+        select{width:100%;padding:8px 10px;border:1.5px solid #d1d5db;border-radius:7px;font-size:.85rem;background:#fff;color:#1a1a1a}
+        select:focus{outline:none;border-color:#14532d}
+        .checkbox-group{display:flex;flex-direction:column;gap:7px}
+        .checkbox-item{display:flex;align-items:center;gap:8px;cursor:pointer}
+        input[type="checkbox"]{width:16px;height:16px;accent-color:#14532d;cursor:pointer;flex-shrink:0}
+        .checkbox-item label{cursor:pointer;font-size:.85rem;color:#374151;flex:1}
+        .reset-btn{width:100%;margin-top:18px;padding:10px;background:#f0fdf4;border:1.5px solid #14532d;border-radius:8px;cursor:pointer;font-weight:600;color:#14532d;font-size:.83rem;transition:all .2s}
+        .reset-btn:hover{background:#14532d;color:#fff}
+
+        /* STATS */
+        .stats{background:#fff;border-radius:10px;padding:14px 18px;margin-bottom:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+        .stat-item{text-align:center}
+        .stat-number{font-size:1.5rem;font-weight:700;color:#14532d}
+        .stat-label{font-size:.7rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+
+        /* CARDS */
+        .results-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+        .shoe-card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.07);border-left:4px solid #d1d5db;transition:box-shadow .2s,transform .2s}
+        .shoe-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.12);transform:translateY(-3px)}
+        .shoe-card.top{border-left-color:#14532d;background:linear-gradient(to bottom,#f0fdf4,#fff)}
+        .shoe-badge-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+        .badge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:.68rem;font-weight:700}
+        .badge.top-pick{background:#dcfce7;color:#14532d}
+        .badge.rol{background:#f3f4f6;color:#374151}
+        .shoe-name{font-size:.95rem;font-weight:700;color:#1a1a1a;margin-bottom:3px}
+        .shoe-subhead{font-size:.78rem;color:#6b7280;margin-bottom:10px}
+        .shoe-price-tag{display:inline-block;background:#14532d;color:#fff;padding:3px 10px;border-radius:5px;font-size:.8rem;font-weight:700;margin-bottom:10px}
+        .metrics{display:grid;gap:5px;padding:10px 0;border-top:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0;margin-bottom:10px}
+        .metric-row{display:flex;align-items:center;justify-content:space-between}
+        .metric-lbl{font-size:.7rem;color:#9ca3af;min-width:90px}
+        .metric-dots{font-size:.8rem;letter-spacing:1px}
+        .shoe-copy{font-size:.78rem;color:#555;line-height:1.5;margin-bottom:10px}
+        .tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+        .tag{padding:2px 8px;border-radius:999px;background:#f3f4f6;font-size:.68rem;color:#374151}
+        .buy-btn{display:block;width:100%;padding:9px;background:#14532d;color:#fff;border:none;border-radius:8px;font-size:.82rem;font-weight:600;text-align:center;text-decoration:none;cursor:pointer;transition:background .18s}
+        .buy-btn:hover{background:#166534}
+        .no-results{text-align:center;padding:40px 20px;background:#fff;border-radius:12px;color:#888;grid-column:1/-1}
+
+        /* RESPONSIVE */
+        @media(max-width:768px){
+            .main-grid{grid-template-columns:1fr}
+            .filters-panel{position:relative;top:0}
+            header{flex-direction:column;align-items:flex-start}
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🏃 Trail Shoe Analytics Coach</h1>
-            <p class="subtitle">Filtrador inteligente de tenis de trail running 2026</p>
-        </header>
-        
-        <div class="main-grid">
-            <!-- FILTERS PANEL -->
-            <div class="filters-panel">
-                <h2 style="margin-bottom: 20px; font-size: 1.1em;">Filtra por tus criterios</h2>
-                
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <span class="filter-icon">📏</span>
-                        Distancia típica
-                    </label>
-                    <select id="distance">
-                        <option value="">Todas</option>
-                        <option value="5-10K">5-10K (speed)</option>
-                        <option value="10-25K">10-25K (mixed)</option>
-                        <option value="25-50K">25-50K (long)</option>
-                        <option value="50K+">50K+ (ultra)</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <span class="filter-icon">🪨</span>
-                        Tipo de terreno
-                    </label>
-                    <select id="terrain">
-                        <option value="">Todos</option>
-                        <option value="rocky">Rocky / Técnico</option>
-                        <option value="mixed">Mixed / Singletrack</option>
-                        <option value="gravel">Gravel / Smooth</option>
-                        <option value="versatile">Versátil (todoterreno)</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <span class="filter-icon">⚖️</span>
-                        Peso máximo (g)
-                    </label>
-                    <input type="range" id="weight" min="250" max="400" value="400" step="10">
-                    <div style="font-size: 0.85em; color: #667eea; margin-top: 5px; font-weight: 600;">
-                        Hasta <span id="weightValue">400</span>g
+<div class="container">
+    <header>
+        <div>
+            <h1>Trail Shoe Coach — Explorador</h1>
+            <p>Filtra y encuentra tu tenis ideal entre 22 modelos para México</p>
+        </div>
+        <a href="index.html" class="header-link">← Ir al cuestionario</a>
+    </header>
+
+    <div class="main-grid">
+        <div class="filters-panel">
+            <h2>Filtrar por</h2>
+
+            <div class="filter-group">
+                <div class="filter-label">🪨 Terreno</div>
+                <select id="f-terreno">
+                    <option value="">Cualquiera</option>
+                    <option value="mixto">Mixto / Bosque</option>
+                    <option value="montaña">Montaña</option>
+                    <option value="barro">Barro / Tierra suelta</option>
+                    <option value="roca">Roca / Técnico</option>
+                    <option value="bosque">Bosque</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-label">💰 Presupuesto</div>
+                <select id="f-precio">
+                    <option value="">Cualquiera</option>
+                    <option value="bajo">Menos de $2,000 MXN</option>
+                    <option value="medio">$2,000 – $3,500 MXN</option>
+                    <option value="alto">Más de $3,500 MXN</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-label">📊 Nivel</div>
+                <select id="f-nivel">
+                    <option value="">Cualquiera</option>
+                    <option value="principiante">Principiante</option>
+                    <option value="intermedio">Intermedio</option>
+                    <option value="avanzado">Avanzado</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-label">🎯 Prioridad</div>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="p-agarre" value="agarre">
+                        <label for="p-agarre">Máximo agarre</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="p-amort" value="amort">
+                        <label for="p-amort">Máxima amortiguación</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="p-estab" value="estab">
+                        <label for="p-estab">Máxima estabilidad</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="p-ligero" value="ligero">
+                        <label for="p-ligero">Ligero / minimalista</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="p-valor" value="valor">
+                        <label for="p-valor">Mejor valor (< $2,500 MXN)</label>
                     </div>
                 </div>
-                
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <span class="filter-icon">💰</span>
-                        Rango de precio USD
-                    </label>
-                    <select id="price">
-                        <option value="">Todos</option>
-                        <option value="100-150">$100-150 (Budget)</option>
-                        <option value="150-200">$150-200 (Mid)</option>
-                        <option value="200+">$200+ (Premium)</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <span class="filter-icon">🎯</span>
-                        Prioridad
-                    </label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="traction" value="traction">
-                            <label for="traction">Máximo agarre</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="cushion" value="cushion">
-                            <label for="cushion">Máxima comodidad</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="lightweight" value="lightweight">
-                            <label for="lightweight">Ultraligero</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="stability" value="stability">
-                            <label for="stability">Máx. estabilidad</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="value" value="value">
-                            <label for="value">Mejor precio/rendimiento</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <button class="reset-btn" onclick="resetFilters()">↺ Reiniciar filtros</button>
             </div>
-            
-            <!-- RESULTS -->
-            <div>
-                <div class="stats" id="stats"></div>
-                <div class="results-container" id="results"></div>
-            </div>
+
+            <button class="reset-btn" onclick="resetFilters()">↺ Reiniciar filtros</button>
+        </div>
+
+        <div>
+            <div class="stats" id="stats"></div>
+            <div class="results-container" id="results"></div>
         </div>
     </div>
-    
-    <script>
-        const shoes = [
-            {
-                name: "Saucony Peregrine 16",
-                price: 150,
-                category: "All-Mountain",
-                distance: "10-25K",
-                terrain: ["rocky", "mixed", "versatile"],
-                weight: 300,
-                cushion: "28/24",
-                traction: 5,
-                stability: 4,
-                fit: "True-to-size, medio",
-                features: ["Vibram outsole", "Versátil", "Técnico+pavement"],
-                pros: ["Mejor todoterreno", "Versátil", "Actualizado 2026"],
-                cons: ["Promedio en todo"],
-                featured: true,
-                reviews: ["iRunFar", "OutdoorGearLab", "TrailAndKale"],
-                tags: ["traction", "stability"]
-            },
-            {
-                name: "Hoka Speedgoat 7",
-                price: 160,
-                category: "Ultra/Distancia",
-                distance: "25-50K",
-                terrain: ["mixed", "versatile"],
-                weight: 315,
-                cushion: "36/32",
-                traction: 4,
-                stability: 3,
-                fit: "Cómodo, ancho",
-                features: ["Máxima amortiguación", "Largo recorrido"],
-                pros: ["Máximo confort", "Excelente fit ancho"],
-                cons: ["Menos técnico", "Pesado"],
-                featured: true,
-                reviews: ["iRunFar", "OutdoorGearLab"],
-                tags: ["cushion", "stability"]
-            },
-            {
-                name: "La Sportiva Prodigio Pro",
-                price: 225,
-                category: "Técnico/Racing",
-                distance: "5-10K",
-                terrain: ["rocky"],
-                weight: 280,
-                cushion: "20/24",
-                traction: 5,
-                stability: 5,
-                fit: "Snug, true-to-size",
-                features: ["Carreras", "Máximo técnico", "Vibram premium"],
-                pros: ["Mejor traction", "Muy técnico", "Ligero"],
-                cons: ["No cómodo", "Caro", "Racing only"],
-                featured: false,
-                reviews: ["iRunFar", "OutdoorGearLab"],
-                tags: ["traction", "lightweight"]
-            },
-            {
-                name: "Hoka Torrent 4",
-                price: 135,
-                category: "All-Mountain",
-                distance: "10-25K",
-                terrain: ["mixed", "versatile"],
-                weight: 310,
-                cushion: "32",
-                traction: 4,
-                stability: 3,
-                fit: "Cómodo, true-to-size",
-                features: ["Mejor precio/rendimiento", "Road-to-trail"],
-                pros: ["Muy económico", "Buen todoterreno"],
-                cons: ["Menos técnico", "Pesado"],
-                featured: false,
-                reviews: ["iRunFar", "OutdoorGearLab"],
-                tags: ["value"]
-            },
-            {
-                name: "Craft Nordlite Ultra 2.0",
-                price: 180,
-                category: "Road-to-Trail",
-                distance: "5-10K",
-                terrain: ["gravel", "mixed"],
-                weight: 290,
-                cushion: "30",
-                traction: 3,
-                stability: 3,
-                fit: "Cómodo, generoso",
-                features: ["Transición", "Gravel-friendly"],
-                pros: ["Muy cómodo", "Road-like"],
-                cons: ["No muy técnico"],
-                featured: false,
-                reviews: ["OutsideOnline"],
-                tags: ["lightweight"]
-            },
-            {
-                name: "Altra Lone Peak 9",
-                price: 130,
-                category: "Budget All-Mountain",
-                distance: "10-25K",
-                terrain: ["mixed", "versatile"],
-                weight: 390,
-                cushion: "25",
-                traction: 3,
-                stability: 2,
-                fit: "MUY ancho, zero-drop",
-                features: ["Presupuesto", "Ancho máximo"],
-                pros: ["Muy económico", "Muy ancho"],
-                cons: ["Pesado", "Lug wear rápido", "Sloppy"],
-                featured: false,
-                reviews: ["Switchback Travel"],
-                tags: ["value"]
-            },
-            {
-                name: "Nnormal Kjerag 02",
-                price: 220,
-                category: "Técnico Puro",
-                distance: "10-25K",
-                terrain: ["rocky"],
-                weight: 285,
-                cushion: "19",
-                traction: 5,
-                stability: 5,
-                fit: "Snug, wide sensitive",
-                features: ["Rock-sticky", "Approach-shoe like"],
-                pros: ["Máximo grip roca", "Muy técnico"],
-                cons: ["Poco confort", "Caro", "Fit snug"],
-                featured: false,
-                reviews: ["BetterTrail"],
-                tags: ["traction", "stability"]
-            },
-            {
-                name: "Salomon Speedcross 6",
-                price: 150,
-                category: "Road-to-Trail",
-                distance: "5-10K",
-                terrain: ["gravel", "mixed"],
-                weight: 305,
-                cushion: "22",
-                traction: 4,
-                stability: 3,
-                fit: "True-to-size",
-                features: ["Veloz", "Versatilidad"],
-                pros: ["Ágil", "Buen precio"],
-                cons: ["Poco confort largo"],
-                featured: false,
-                reviews: ["Switchback Travel"],
-                tags: ["traction"]
-            }
-        ];
-        
-        function renderShoes(filtered) {
-            const results = document.getElementById('results');
-            const stats = document.getElementById('stats');
-            
-            if (filtered.length === 0) {
-                results.innerHTML = '<div class="no-results">No hay tenis que coincidan con tus filtros. Intenta ajustarlos.</div>';
-                stats.innerHTML = '';
-                return;
-            }
-            
-            // Calculate stats
-            const avgPrice = (filtered.reduce((a, b) => a + b.price, 0) / filtered.length).toFixed(0);
-            const avgWeight = (filtered.reduce((a, b) => a + b.weight, 0) / filtered.length).toFixed(0);
-            const featured = filtered.filter(s => s.featured).length;
-            
-            stats.innerHTML = `
-                <div class="stat-item">
-                    <div class="stat-number">${filtered.length}</div>
-                    <div class="stat-label">Resultados</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">$${avgPrice}</div>
-                    <div class="stat-label">Precio Promedio</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">${avgWeight}g</div>
-                    <div class="stat-label">Peso Promedio</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">${featured}</div>
-                    <div class="stat-label">Top Picks</div>
-                </div>
-            `;
-            
-            results.innerHTML = filtered.map(shoe => `
-                <div class="shoe-card ${shoe.featured ? 'featured' : ''}">
-                    ${shoe.featured ? '<span class="badge featured-badge">🏆 TOP PICK</span>' : ''}
-                    <span class="badge category">${shoe.category}</span>
-                    
-                    <div class="shoe-header">
-                        <div class="shoe-name">${shoe.name}</div>
-                        <div class="shoe-price">$${shoe.price}</div>
-                    </div>
-                    
-                    <div class="spec-row">
-                        <div class="spec-label">Distancia</div>
-                        <div class="spec-value">${shoe.distance}</div>
-                    </div>
-                    
-                    <div class="spec-row">
-                        <div class="spec-label">Terreno</div>
-                        <div class="spec-value">${shoe.terrain.join(', ')}</div>
-                    </div>
-                    
-                    <div class="spec-row">
-                        <div class="spec-label">Peso</div>
-                        <div class="spec-value">${shoe.weight}g</div>
-                    </div>
-                    
-                    <div class="spec-row">
-                        <div class="spec-label">Amortiguación</div>
-                        <div class="spec-value">${shoe.cushion}mm</div>
-                    </div>
-                    
-                    <div class="spec-row">
-                        <div class="spec-label">Traction</div>
-                        <div class="spec-value"><span class="stars">${'★'.repeat(shoe.traction)}${'☆'.repeat(5-shoe.traction)}</span></div>
-                    </div>
-                    
-                    <div class="spec-row">
-                        <div class="spec-label">Estabilidad</div>
-                        <div class="spec-value"><span class="stars">${'★'.repeat(shoe.stability)}${'☆'.repeat(5-shoe.stability)}</span></div>
-                    </div>
-                    
-                    <div class="spec-row">
-                        <div class="spec-label">Fit</div>
-                        <div class="spec-value">${shoe.fit}</div>
-                    </div>
-                    
-                    <div style="padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
-                        <strong style="font-size: 0.9em; color: #333;">Pros:</strong>
-                        <div style="font-size: 0.85em; color: #27ae60; margin-top: 4px;">✓ ${shoe.pros.join(' • ')}</div>
-                    </div>
-                    
-                    <div style="padding: 10px 0; margin-bottom: 10px;">
-                        <strong style="font-size: 0.9em; color: #333;">Contras:</strong>
-                        <div style="font-size: 0.85em; color: #e74c3c; margin-top: 4px;">✗ ${shoe.cons.join(' • ')}</div>
-                    </div>
-                    
-                    <div class="review-source">
-                        <strong style="font-size: 0.8em;">Reviews en:</strong> ${shoe.reviews.join(', ')}
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        function filterShoes() {
-            const distance = document.getElementById('distance').value;
-            const terrain = document.getElementById('terrain').value;
-            const weight = parseInt(document.getElementById('weight').value);
-            const price = document.getElementById('price').value;
-            
-            const priorities = [];
-            if (document.getElementById('traction').checked) priorities.push('traction');
-            if (document.getElementById('cushion').checked) priorities.push('cushion');
-            if (document.getElementById('lightweight').checked) priorities.push('lightweight');
-            if (document.getElementById('stability').checked) priorities.push('stability');
-            if (document.getElementById('value').checked) priorities.push('value');
-            
-            let filtered = shoes;
-            
-            if (distance) {
-                filtered = filtered.filter(s => s.distance === distance);
-            }
-            
-            if (terrain) {
-                filtered = filtered.filter(s => s.terrain.includes(terrain));
-            }
-            
-            filtered = filtered.filter(s => s.weight <= weight);
-            
-            if (price) {
-                const [min, max] = price.split('-').map(Number);
-                filtered = filtered.filter(s => s.price >= min && s.price <= (max || 9999));
-            }
-            
-            if (priorities.length > 0) {
-                filtered = filtered.filter(s => priorities.some(p => s.tags.includes(p)));
-            }
-            
-            // Sort: featured first, then by best rating
-            filtered.sort((a, b) => {
-                if (b.featured - a.featured !== 0) return b.featured - a.featured;
-                return (b.traction + b.stability) - (a.traction + a.stability);
-            });
-            
-            renderShoes(filtered);
-        }
-        
-        function resetFilters() {
-            document.getElementById('distance').value = '';
-            document.getElementById('terrain').value = '';
-            document.getElementById('weight').value = 400;
-            document.getElementById('price').value = '';
-            document.getElementById('weightValue').textContent = '400';
-            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            filterShoes();
-        }
-        
-        // Event listeners
-        document.getElementById('distance').addEventListener('change', filterShoes);
-        document.getElementById('terrain').addEventListener('change', filterShoes);
-        document.getElementById('weight').addEventListener('input', e => {
-            document.getElementById('weightValue').textContent = e.target.value;
-            filterShoes();
-        });
-        document.getElementById('price').addEventListener('change', filterShoes);
-        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-            cb.addEventListener('change', filterShoes);
-        });
-        
-        // Initial render
-        filterShoes();
-    </script>
+</div>
+
+<script>
+const catalogo = [
+  {nombre:'Merrell Trail Glove 7',marca:'Merrell',precio:'$1,600 MXN',precioNum:1600,
+    bucket:['mixed_trail','door_to_trail'],terrenoKeys:['mixto','bosque'],tags:['ligero','zero-drop'],
+    nivelKeys:['principiante'],rol:'ligero',distancia:'Corta',
+    subhead:'Zero-drop y económico para dar el primer paso.',
+    copy:'Minimalista para quien quiere probar el trail sin comprometer presupuesto.',
+    metricas:{amortiguacion:1,agarre:3,estabilidad:2},
+    link:'https://www.amazon.com.mx/s?k=Merrell+Trail+Glove+7'},
+  {nombre:'Merrell Moab 3 Vent',marca:'Merrell',precio:'$1,800 MXN',precioNum:1800,
+    bucket:['mixed_trail','door_to_trail'],terrenoKeys:['mixto','bosque'],tags:['protección','versátil'],
+    nivelKeys:['principiante'],rol:'protección',distancia:'Corta-Media',
+    subhead:'La más protectora y estable para quien recién empieza.',
+    copy:'Construcción robusta con agarre confiable para terreno mixto.',
+    metricas:{amortiguacion:3,agarre:4,estabilidad:3},
+    link:'https://www.amazon.com.mx/s?k=Merrell+Moab+3+Vent+trail'},
+  {nombre:'Adidas Terrex Agravic Flow 2',marca:'Adidas',precio:'$1,900 MXN',precioNum:1900,
+    bucket:['door_to_trail','mixed_trail'],terrenoKeys:['mixto','bosque'],tags:['puerta-trail','ciudad','ligero'],
+    nivelKeys:['principiante'],rol:'transición',distancia:'Corta',
+    subhead:'El paso natural del asfalto al trail.',
+    copy:'Suela que funciona en asfalto y sendero ligero. Peso bajo y precio accesible.',
+    metricas:{amortiguacion:4,agarre:3,estabilidad:3},
+    link:'https://www.amazon.com.mx/s?k=Adidas+Terrex+Agravic+Flow+2'},
+  {nombre:'Salomon Sense Ride 5',marca:'Salomon',precio:'$1,900 MXN',precioNum:1900,
+    bucket:['mixed_trail','door_to_trail'],terrenoKeys:['mixto','montaña','bosque'],tags:['mixto','versátil'],
+    nivelKeys:['principiante','intermedio'],rol:'versátil',distancia:'Corta-Media',
+    subhead:'La opción más versátil para empezar en senderos de bosque.',
+    copy:'Buen equilibrio entre tracción y comodidad para terreno mixto.',
+    metricas:{amortiguacion:3,agarre:3,estabilidad:3},
+    link:'https://www.amazon.com.mx/s?k=Salomon+Sense+Ride+5+trail'},
+  {nombre:'New Balance Hierro V8',marca:'New Balance',precio:'$1,950 MXN',precioNum:1950,
+    bucket:['mixed_trail','door_to_trail'],terrenoKeys:['mixto','bosque','montaña'],tags:['mixto','equilibrado'],
+    nivelKeys:['principiante','intermedio'],rol:'equilibrado',distancia:'Media',
+    subhead:'Más capaz que un principiante, más accesible que un intermedio.',
+    copy:'Mayor tracción y amortiguación que los modelos de entrada, a precio aún accesible.',
+    metricas:{amortiguacion:4,agarre:4,estabilidad:3},
+    link:'https://www.amazon.com.mx/s?k=New+Balance+Hierro+V8+trail'},
+  {nombre:'Brooks Cascadia 17',marca:'Brooks',precio:'$2,200 MXN',precioNum:2200,
+    bucket:['mixed_trail','technical_trail'],terrenoKeys:['mixto','bosque','montaña'],tags:['mixto','bosque','montaña'],
+    nivelKeys:['principiante','intermedio'],rol:'estabilidad',distancia:'Media-larga',
+    subhead:'La más estable si quieres protección en terreno variable.',
+    copy:'Balance sólido entre protección, estabilidad y adaptabilidad.',
+    metricas:{amortiguacion:3,agarre:4,estabilidad:4},
+    link:'https://www.amazon.com.mx/s?k=Brooks+Cascadia+17+trail'},
+  {nombre:'Hoka Challenger 7',marca:'Hoka',precio:'$2,500 MXN',precioNum:2500,
+    bucket:['door_to_trail','mixed_trail'],terrenoKeys:['mixto','bosque'],tags:['puerta-trail','amortiguado','versátil'],
+    nivelKeys:['principiante','intermedio'],rol:'confort',distancia:'Media-larga',
+    subhead:'La más cómoda para ir del asfalto al sendero.',
+    copy:'Amortiguación característica de Hoka en un zapato versátil para ciudad y trail suave.',
+    metricas:{amortiguacion:5,agarre:3,estabilidad:4},
+    link:'https://www.amazon.com.mx/s?k=Hoka+Challenger+7+trail'},
+  {nombre:'Salomon Speedcross 6',marca:'Salomon',precio:'$2,800 MXN',precioNum:2800,
+    bucket:['mud_soft_ground','technical_trail','mixed_trail'],terrenoKeys:['montaña','mixto','barro'],tags:['barro','agarre alto','técnico'],
+    nivelKeys:['principiante','intermedio','avanzado'],rol:'agarre',distancia:'Corta-Media',
+    subhead:'La mejor si corres en barro o terreno suelto.',
+    copy:'El agarre más agresivo del grupo. Tracción superior en lodo y tierra suelta.',
+    metricas:{amortiguacion:3,agarre:5,estabilidad:4},
+    link:'https://www.amazon.com.mx/s?k=Salomon+Speedcross+6'},
+  {nombre:'Merrell Agility Peak 5',marca:'Merrell',precio:'$2,900 MXN',precioNum:2900,
+    bucket:['mud_soft_ground','mixed_trail'],terrenoKeys:['barro','mixto'],tags:['barro','grip','accesible'],
+    nivelKeys:['principiante','intermedio'],rol:'agarre',distancia:'Media',
+    subhead:'La opción más accesible para terreno suelto y húmedo.',
+    copy:'Suela con buen agarre en tierra suelta y barro a precio razonable.',
+    metricas:{amortiguacion:3,agarre:4,estabilidad:3},
+    link:'https://www.amazon.com.mx/s?k=Merrell+Agility+Peak+5+trail'},
+  {nombre:'Salomon Pulsar Trail',marca:'Salomon',precio:'$3,000 MXN',precioNum:3000,
+    bucket:['technical_trail','mixed_trail'],terrenoKeys:['montaña','roca','mixto'],tags:['técnico','ligero','precisión'],
+    nivelKeys:['intermedio'],rol:'técnico',distancia:'Media',
+    subhead:'La opción técnica de Salomon más accesible.',
+    copy:'Respuesta ágil en terreno técnico con la tracción característica de Salomon.',
+    metricas:{amortiguacion:3,agarre:4,estabilidad:3},
+    link:'https://www.amazon.com.mx/s?k=Salomon+Pulsar+Trail'},
+  {nombre:'Salomon Ultra Glide 2',marca:'Salomon',precio:'$3,100 MXN',precioNum:3100,
+    bucket:['mixed_trail','door_to_trail'],terrenoKeys:['bosque','mixto'],tags:['mixto','amortiguado','versátil'],
+    nivelKeys:['intermedio','avanzado'],rol:'confort',distancia:'Larga',
+    subhead:'La más cómoda para acumular kilómetros en terreno suave.',
+    copy:'Alta amortiguación y versatilidad para terreno moderado y distancias largas.',
+    metricas:{amortiguacion:5,agarre:3,estabilidad:3},
+    link:'https://www.amazon.com.mx/s?k=Salomon+Ultra+Glide+2+trail'},
+  {nombre:'The North Face Flight Vectiv',marca:'The North Face',precio:'$3,200 MXN',precioNum:3200,
+    bucket:['door_to_trail','mixed_trail'],terrenoKeys:['mixto','bosque'],tags:['puerta-trail','placa','velocidad'],
+    nivelKeys:['intermedio','avanzado'],rol:'velocidad',distancia:'Corta-Media',
+    subhead:'La más rápida para quien busca tiempo en trail suave.',
+    copy:'Placa Vectiv para mayor propulsión en terreno suave y transiciones ciudad-trail.',
+    metricas:{amortiguacion:4,agarre:4,estabilidad:4},
+    link:'https://www.amazon.com.mx/s?k=The+North+Face+Flight+Vectiv'},
+  {nombre:'Inov-8 Trailfly G 270',marca:'Inov-8',precio:'$3,200 MXN',precioNum:3200,
+    bucket:['technical_trail','mud_soft_ground'],terrenoKeys:['roca','mixto'],tags:['roca','agarre extremo','técnico'],
+    nivelKeys:['intermedio','avanzado'],rol:'agarre',distancia:'Corta-Media',
+    subhead:'La más técnica para roca y terreno duro.',
+    copy:'Suela de grafeno para agarre extremo en roca seca.',
+    metricas:{amortiguacion:2,agarre:5,estabilidad:3},
+    link:'https://www.amazon.com.mx/s?k=Inov-8+Trailfly+G+270'},
+  {nombre:'Hoka Speedgoat 6',marca:'Hoka',precio:'$3,200 MXN',precioNum:3200,
+    bucket:['technical_trail','mixed_trail','mud_soft_ground'],terrenoKeys:['montaña','mixto','bosque','roca'],tags:['ultra','distancia','montaña','todo terreno'],
+    nivelKeys:['intermedio','avanzado'],rol:'confort',distancia:'Larga-Ultra',
+    subhead:'La referencia en todo terreno para distancias largas.',
+    copy:'Más agarre y más amortiguación. Protege el pie en kilómetros largos en cualquier terreno.',
+    metricas:{amortiguacion:5,agarre:5,estabilidad:4},
+    link:'https://www.amazon.com.mx/s?k=Hoka+Speedgoat+6+trail'},
+  {nombre:'The North Face Vectiv Enduris 2',marca:'The North Face',precio:'$3,490 MXN',precioNum:3490,
+    bucket:['mixed_trail','technical_trail'],terrenoKeys:['mixto','bosque','montaña'],tags:['mixto','placa','larga distancia'],
+    nivelKeys:['intermedio'],rol:'estabilidad',distancia:'Larga',
+    subhead:'Estabilidad y propulsión para acumular kilómetros.',
+    copy:'Placa Vectiv para mayor eficiencia en distancias largas.',
+    metricas:{amortiguacion:4,agarre:4,estabilidad:4},
+    link:'https://www.amazon.com.mx/s?k=The+North+Face+Vectiv+Enduris+2'},
+  {nombre:'La Sportiva Bushido III',marca:'La Sportiva',precio:'$3,500 MXN',precioNum:3500,
+    bucket:['technical_trail'],terrenoKeys:['roca','montaña'],tags:['técnico','roca','precisión'],
+    nivelKeys:['intermedio','avanzado'],rol:'técnico',distancia:'Media-Larga',
+    subhead:'La más precisa en terreno técnico y rocky.',
+    copy:'Alta estabilidad lateral y agarre preciso para corredores que buscan control máximo.',
+    metricas:{amortiguacion:3,agarre:5,estabilidad:5},
+    link:'https://www.amazon.com.mx/s?k=La+Sportiva+Bushido+III'},
+  {nombre:'La Sportiva Jackal II',marca:'La Sportiva',precio:'$3,600 MXN',precioNum:3600,
+    bucket:['mud_soft_ground','technical_trail'],terrenoKeys:['barro','montaña'],tags:['barro','agarre','competencia'],
+    nivelKeys:['intermedio','avanzado'],rol:'agarre',distancia:'Media-Larga',
+    subhead:'La opción premium para barro y tierra suelta.',
+    copy:'Suela muy agresiva para condiciones difíciles: barro, tierra suelta y terreno variable.',
+    metricas:{amortiguacion:3,agarre:5,estabilidad:4},
+    link:'https://www.amazon.com.mx/s?k=La+Sportiva+Jackal+II'},
+  {nombre:'Nike Ultrafly',marca:'Nike',precio:'$3,800 MXN',precioNum:3800,
+    bucket:['door_to_trail','mixed_trail'],terrenoKeys:['mixto','bosque'],tags:['puerta-trail','velocidad','placa carbono'],
+    nivelKeys:['intermedio','avanzado'],rol:'velocidad',distancia:'Corta-Media',
+    subhead:'La opción de carbono para competencia en trail no técnico.',
+    copy:'Placa de carbono para máxima propulsión en trail suave.',
+    metricas:{amortiguacion:4,agarre:4,estabilidad:4},
+    link:'https://www.amazon.com.mx/s?k=Nike+Ultrafly+trail'},
+  {nombre:'Hoka Mafate 5',marca:'Hoka',precio:'$4,200 MXN',precioNum:4200,
+    bucket:['mud_soft_ground','technical_trail'],terrenoKeys:['barro','montaña'],tags:['ultra','barro','máxima protección'],
+    nivelKeys:['avanzado'],rol:'ultra',distancia:'Ultra',
+    subhead:'La más protectora para ultra en terreno difícil.',
+    copy:'Máxima amortiguación y estabilidad para distancias ultra en terreno exigente.',
+    metricas:{amortiguacion:5,agarre:4,estabilidad:5},
+    link:'https://www.amazon.com.mx/s?k=Hoka+Mafate+5'},
+  {nombre:'Altra FujiSpeed 4',marca:'Altra',precio:'$4,500 MXN',precioNum:4500,
+    bucket:['technical_trail'],terrenoKeys:['montaña','roca'],tags:['técnico','zero-drop','ultra'],
+    nivelKeys:['avanzado'],rol:'competencia',distancia:'Larga-Ultra',
+    subhead:'Calce natural con agarre preciso para terreno técnico.',
+    copy:'Plataforma zero-drop con agarre preciso para terreno técnico. Para corredores avanzados.',
+    metricas:{amortiguacion:4,agarre:5,estabilidad:3},
+    link:'https://www.amazon.com.mx/s?k=Altra+FujiSpeed+4+trail'},
+  {nombre:'HOKA Tecton X 2',marca:'Hoka',precio:'$4,800 MXN',precioNum:4800,
+    bucket:['technical_trail'],terrenoKeys:['roca','montaña'],tags:['roca','montaña','competencia','placa carbono'],
+    nivelKeys:['avanzado'],rol:'competencia',distancia:'Ultra',
+    subhead:'Placa de carbono para competir en ultra técnico.',
+    copy:'Placa de carbono más amortiguación máxima. Para competir en terreno técnico.',
+    metricas:{amortiguacion:5,agarre:4,estabilidad:4},
+    link:'https://www.amazon.com.mx/s?k=Hoka+Tecton+X+2'},
+  {nombre:'Salomon S/LAB Ultra 3',marca:'Salomon',precio:'$5,200 MXN',precioNum:5200,
+    bucket:['technical_trail','mixed_trail'],terrenoKeys:['montaña','mixto','roca'],tags:['ultra','montaña','elite'],
+    nivelKeys:['avanzado'],rol:'competencia',distancia:'Ultra',
+    subhead:'Edición de laboratorio para competir en cualquier terreno.',
+    copy:'El más ligero y reactivo del grupo. Para competidores que priorizan rendimiento.',
+    metricas:{amortiguacion:4,agarre:4,estabilidad:3},
+    link:'https://www.amazon.com.mx/s?k=Salomon+S+LAB+Ultra+3'}
+];
+
+function dots(n){
+  n=Math.min(Math.max(Math.round(n||0),0),5);
+  return '<span style="color:#14532d">'+'\u25cf'.repeat(n)+'</span>'+
+         '<span style="color:#d1d5db">'+'\u25cb'.repeat(5-n)+'</span>';
+}
+
+function renderShoes(filtered){
+  const results=document.getElementById('results');
+  const stats=document.getElementById('stats');
+  if(filtered.length===0){
+    results.innerHTML='<div class="no-results">No hay tenis con estos filtros. Intenta ampliarlos.</div>';
+    stats.innerHTML='';
+    return;
+  }
+  const avgP=Math.round(filtered.reduce((s,z)=>s+z.precioNum,0)/filtered.length);
+  stats.innerHTML=`
+    <div class="stat-item"><div class="stat-number">${filtered.length}</div><div class="stat-label">Resultados</div></div>
+    <div class="stat-item"><div class="stat-number">$${avgP.toLocaleString('es-MX')}</div><div class="stat-label">Precio promedio MXN</div></div>
+    <div class="stat-item"><div class="stat-number">${filtered.filter(z=>z.precioNum<2000).length}</div><div class="stat-label">Menos de $2K</div></div>
+  `;
+  const rolLabel={versátil:'Versátil',confort:'Confort',agarre:'Agarre',ligero:'Ligero',técnico:'Técnico',
+    equilibrado:'Equilibrado',estabilidad:'Estabilidad',velocidad:'Velocidad',
+    competencia:'Competencia',ultra:'Ultra',transición:'Transición',protección:'Protección'};
+  results.innerHTML=filtered.map(z=>{
+    const isTop=(z.metricas.agarre+z.metricas.estabilidad)>=8;
+    return `<div class="shoe-card${isTop?' top':''}">
+      <div class="shoe-badge-row">
+        ${isTop?'<span class="badge top-pick">Destacado</span>':''}
+        <span class="badge rol">${rolLabel[z.rol]||z.rol}</span>
+      </div>
+      <div class="shoe-name">${z.nombre}</div>
+      <div class="shoe-subhead">${z.subhead}</div>
+      <div class="shoe-price-tag">${z.precio}</div>
+      <div class="metrics">
+        <div class="metric-row"><span class="metric-lbl">Amortiguación</span><span class="metric-dots">${dots(z.metricas.amortiguacion)}</span></div>
+        <div class="metric-row"><span class="metric-lbl">Agarre</span><span class="metric-dots">${dots(z.metricas.agarre)}</span></div>
+        <div class="metric-row"><span class="metric-lbl">Estabilidad</span><span class="metric-dots">${dots(z.metricas.estabilidad)}</span></div>
+      </div>
+      <p class="shoe-copy">${z.copy}</p>
+      <div class="tags">${(z.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      ${z.link?`<a class="buy-btn" href="${z.link}" target="_blank" rel="noopener">Ver precio →</a>`:''}
+    </div>`;
+  }).join('');
+}
+
+function filterShoes(){
+  const terreno=document.getElementById('f-terreno').value;
+  const precio=document.getElementById('f-precio').value;
+  const nivel=document.getElementById('f-nivel').value;
+  const pAgarre=document.getElementById('p-agarre').checked;
+  const pAmort=document.getElementById('p-amort').checked;
+  const pEstab=document.getElementById('p-estab').checked;
+  const pLigero=document.getElementById('p-ligero').checked;
+  const pValor=document.getElementById('p-valor').checked;
+  const hayPrioridades=pAgarre||pAmort||pEstab||pLigero||pValor;
+
+  let lista=catalogo.filter(z=>{
+    if(terreno&&!(z.terrenoKeys||[]).includes(terreno)) return false;
+    if(precio==='bajo'&&z.precioNum>=2000) return false;
+    if(precio==='medio'&&(z.precioNum<2000||z.precioNum>3500)) return false;
+    if(precio==='alto'&&z.precioNum<=3500) return false;
+    if(nivel&&!(z.nivelKeys||[]).includes(nivel)) return false;
+    if(hayPrioridades){
+      const ok=(pAgarre&&z.metricas.agarre>=4)||
+               (pAmort&&z.metricas.amortiguacion>=4)||
+               (pEstab&&z.metricas.estabilidad>=4)||
+               (pLigero&&z.metricas.amortiguacion<=2)||
+               (pValor&&z.precioNum<2500);
+      if(!ok) return false;
+    }
+    return true;
+  });
+
+  lista.sort((a,b)=>
+    (b.metricas.agarre+b.metricas.estabilidad)-(a.metricas.agarre+a.metricas.estabilidad)||
+    a.precioNum-b.precioNum
+  );
+  renderShoes(lista);
+}
+
+function resetFilters(){
+  ['f-terreno','f-precio','f-nivel'].forEach(id=>document.getElementById(id).value='');
+  ['p-agarre','p-amort','p-estab','p-ligero','p-valor'].forEach(id=>document.getElementById(id).checked=false);
+  filterShoes();
+}
+
+['f-terreno','f-precio','f-nivel'].forEach(id=>
+  document.getElementById(id).addEventListener('change',filterShoes));
+['p-agarre','p-amort','p-estab','p-ligero','p-valor'].forEach(id=>
+  document.getElementById(id).addEventListener('change',filterShoes));
+
+filterShoes();
+</script>
 </body>
 </html>
