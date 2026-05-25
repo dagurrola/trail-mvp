@@ -325,8 +325,9 @@ function renderShoes(filtered){
   }
   const avgP=Math.round(filtered.reduce((s,z)=>s+z.precioNum,0)/filtered.length);
   stats.innerHTML=`
+    <div class="stat-item" style="grid-column:1/-1;text-align:left;font-size:.72rem;color:#9ca3af;padding:4px 0;border-bottom:1px solid #f0f0f0;margin-bottom:4px">⚠️ Precios de referencia — pueden variar en tienda. Haz clic en cada zapato para verificar el precio real en Amazon.</div>
     <div class="stat-item"><div class="stat-number">${filtered.length}</div><div class="stat-label">Resultados</div></div>
-    <div class="stat-item"><div class="stat-number">$${avgP.toLocaleString('es-MX')}</div><div class="stat-label">Precio promedio MXN</div></div>
+    <div class="stat-item"><div class="stat-number">$${avgP.toLocaleString('es-MX')}</div><div class="stat-label">Precio ref. promedio</div></div>
     <div class="stat-item"><div class="stat-number">${filtered.filter(z=>z.precioNum<2000).length}</div><div class="stat-label">Menos de $2K</div></div>
   `;
   const rolLabel={versátil:'Versátil',confort:'Confort',agarre:'Agarre',ligero:'Ligero',técnico:'Técnico',
@@ -341,7 +342,7 @@ function renderShoes(filtered){
       </div>
       <div class="shoe-name">${z.nombre}</div>
       <div class="shoe-subhead">${z.subhead}</div>
-      <div class="shoe-price-tag">${z.precio}</div>
+      <div class="shoe-price-tag" title="Precio de referencia — verifica en tienda">≈ ${z.precio}</div>
       <div class="metrics">
         <div class="metric-row"><span class="metric-lbl">Amortiguación</span><span class="metric-dots">${dots(z.metricas.amortiguacion)}</span></div>
         <div class="metric-row"><span class="metric-lbl">Agarre</span><span class="metric-dots">${dots(z.metricas.agarre)}</span></div>
@@ -349,7 +350,7 @@ function renderShoes(filtered){
       </div>
       <p class="shoe-copy">${z.copy}</p>
       <div class="tags">${(z.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-      ${z.link?`<a class="buy-btn" href="${z.link}" target="_blank" rel="noopener">Ver precio →</a>`:''}
+      ${z.link?`<a class="buy-btn" href="${z.link}" target="_blank" rel="noopener">Buscar en Amazon →</a>`:''}
     </div>`;
   }).join('');
 }
