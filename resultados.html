@@ -142,7 +142,6 @@ if (!data) {
             </div>` : '';
 
         function getBuyLink(z) {
-              if (z.linkRunnics) return { url: z.linkRunnics, label: 'Comprar en Runnics' };
               if (z.linkDecathlon) return { url: z.linkDecathlon, label: 'Comprar en Decathlon' };
               if (z.link) return { url: z.link, label: 'Ver en Amazon MX' };
               return null;
@@ -377,7 +376,7 @@ if (!data) {
                         '<div class="metric-row"><span class="metric-label">Estabilidad</span><span class="metric-dots">' + dots(m.estabilidad) + '</span></div>' +
                     '</div>' : '') +
                     '<div class="shoe-price-row"><span class="shoe-price">' + fmt(z.precioNum) + '</span>' +
-                    (function(){var u=z.linkRunnics||z.linkDecathlon||z.link;var lb=z.linkRunnics?'Comprar en Runnics':z.linkDecathlon?'Comprar en Decathlon':'Ver en Amazon MX';return u?'<a class="buy-btn" href="'+u+'" target="_blank" rel="noopener" data-zapato="'+z.nombre+'">'+lb+'</a>':'';}()) +
+                    (function(){var u=z.linkDecathlon||z.link;var lb=z.linkDecathlon?'Comprar en Decathlon':'Ver en Amazon MX';return u?'<a class="buy-btn" href="'+u+'" target="_blank" rel="noopener" data-zapato="'+z.nombre+'">'+lb+'</a>':'';}()) +
                     '</div>';
 
                 // Track click en tienda desde exploración
