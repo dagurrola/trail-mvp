@@ -142,6 +142,7 @@ if (!data) {
             </div>` : '';
 
         function getBuyLink(z) {
+              if (z.linkMarca) return { url: z.linkMarca, label: 'Comprar en ' + (z.labelMarca || 'Tienda oficial') };
               if (z.linkDecathlon) return { url: z.linkDecathlon, label: 'Comprar en Decathlon' };
               if (z.link) return { url: z.link, label: 'Ver en Amazon MX' };
               return null;
@@ -376,7 +377,7 @@ if (!data) {
                         '<div class="metric-row"><span class="metric-label">Estabilidad</span><span class="metric-dots">' + dots(m.estabilidad) + '</span></div>' +
                     '</div>' : '') +
                     '<div class="shoe-price-row"><span class="shoe-price">' + fmt(z.precioNum) + '</span>' +
-                    (function(){var u=z.linkDecathlon||z.link;var lb=z.linkDecathlon?'Comprar en Decathlon':'Ver en Amazon MX';return u?'<a class="buy-btn" href="'+u+'" target="_blank" rel="noopener" data-zapato="'+z.nombre+'">'+lb+'</a>':'';}()) +
+                    (function(){var u=z.linkMarca||z.linkDecathlon||z.link;var lb=z.linkMarca?('Comprar en '+(z.labelMarca||'Tienda oficial')):z.linkDecathlon?'Comprar en Decathlon':'Ver en Amazon MX';return u?'<a class="buy-btn" href="'+u+'" target="_blank" rel="noopener" data-zapato="'+z.nombre+'">'+lb+'</a>':'';}()) +
                     '</div>';
 
                 // Track click en tienda desde exploración
