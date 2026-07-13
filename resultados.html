@@ -35,6 +35,23 @@ h1{font-size:1.25rem;font-weight:700;margin-bottom:8px}
 .metric-label{font-size:.72rem;color:#6b7280;min-width:88px}
 .metric-dots{font-size:.85rem;letter-spacing:1px;color:#14532d}
 
+/* RunRepeat data */
+.rr-scorebadge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;background:#14532d;color:#fff;font-size:.72rem;font-weight:700}
+.rr-scorebadge small{font-weight:500;opacity:.8;font-size:.62rem}
+.rr-specs{display:flex;flex-wrap:wrap;gap:6px;padding-top:10px;border-top:1px solid #f0f0f0}
+.rr-spec{display:flex;flex-direction:column;padding:5px 10px;border-radius:8px;background:#f6f7f6;min-width:62px}
+.rr-spec b{font-size:.82rem;font-weight:700;color:#14532d;line-height:1.1}
+.rr-spec span{font-size:.6rem;color:#6b7280;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
+.rr-proscons{display:grid;gap:5px;padding-top:10px}
+.rr-pc-line{display:flex;gap:7px;font-size:.76rem;line-height:1.4;color:#374151}
+.rr-pc-line .ic{flex-shrink:0;font-weight:700}
+.rr-pc-line.pro .ic{color:#14532d}
+.rr-pc-line.con .ic{color:#b91c1c}
+.rr-source{font-size:.64rem;color:#9ca3af;padding-top:8px}
+.rr-source.pendiente{color:#b45309}
+.rr-titlerow{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.rr-titlerow h3{flex:1}
+
 .shoe-price-row{display:flex;align-items:center;gap:10px;padding-top:8px}.shoe-price-row .shoe-price{flex-shrink:0}
 .shoe-price{font-size:1rem;font-weight:700}
 .buy-btn{display:inline-block;padding:10px 16px;background:#14532d;color:#fff;border-radius:8px;font-size:.8rem;font-weight:600;text-decoration:none;flex-grow:1;text-align:center;min-height:40px;line-height:1.2}
@@ -117,6 +134,31 @@ if (!data) {
                '<span style="color:#d1d5db">' + '○'.repeat(max - n) + '</span>';
     }
 
+    // Helpers RunRepeat (compartidos entre cards recomendadas y exploración)
+    function rrScoreBadge(z) {
+        if (!z.score_rr) return '';
+        return `<span class="rr-scorebadge" title="Puntuación RunRepeat">${z.score_rr}<small>/100</small></span>`;
+    }
+    function rrSpecs(z) {
+        if (!z.peso_g && !z.drop_rr && !z.stack_heel) return '';
+        const items = [];
+        if (z.peso_g) items.push(`<div class="rr-spec"><b>${z.peso_g}g</b><span>Peso</span></div>`);
+        if (z.stack_heel) items.push(`<div class="rr-spec"><b>${z.stack_heel}mm</b><span>Stack</span></div>`);
+        if (z.drop_rr !== undefined && z.drop_rr !== null) items.push(`<div class="rr-spec"><b>${z.drop_rr}mm</b><span>Drop</span></div>`);
+        return items.length ? `<div class="rr-specs">${items.join('')}</div>` : '';
+    }
+    function rrProsCons(z) {
+        const rows = [];
+        if (z.pros && z.pros.length) z.pros.slice(0,3).forEach(p => rows.push(`<div class="rr-pc-line pro"><span class="ic">✓</span><span>${p}</span></div>`));
+        if (z.contras && z.contras.length) z.contras.slice(0,3).forEach(c => rows.push(`<div class="rr-pc-line con"><span class="ic">✕</span><span>${c}</span></div>`));
+        return rows.length ? `<div class="rr-proscons">${rows.join('')}</div>` : '';
+    }
+    function rrSource(z) {
+        if (z.review_source === 'RunRepeat') return `<div class="rr-source">Datos verificados · RunRepeat</div>`;
+        if (z.review_source === 'pendiente') return `<div class="rr-source pendiente">Datos técnicos pendientes de verificar</div>`;
+        return '';
+    }
+
     function renderCard(z, i) {
         const featured = i === 0;
         const badge = featured
@@ -153,17 +195,20 @@ if (!data) {
         return `
         <article class="shoe-card${featured ? ' featured' : ''}">
             ${badge}
-            <h3>${z.nombre}</h3>
+            <div class="rr-titlerow"><h3>${z.nombre}</h3>${rrScoreBadge(z)}</div>
             <p class="shoe-subhead">${z.subhead || z.mejorPara || z.terreno || 'Trail'}</p>
             <div class="shoe-tags">${tagList}</div>
             <p class="shoe-copy">${z.copy || z.descripcion}</p>
             ${z.highlight ? `<p class="shoe-highlight">${z.highlight}</p>` : ''}
             ${metrics}
+            ${rrSpecs(z)}
+            ${rrProsCons(z)}
             <div class="shoe-price-row">
                 <span class="shoe-price">${z.precio}</span>
                 ${link}
             </div>
             ${budgetBadgeHtml}
+            ${rrSource(z)}
         </article>`;
     }
 
@@ -367,7 +412,7 @@ if (!data) {
                 var card = document.createElement('article');
                 card.className = 'shoe-card' + (isTop ? '' : '');
                 card.innerHTML = topBadge +
-                    '<h3>' + z.nombre + '</h3>' +
+                    '<div class="rr-titlerow"><h3>' + z.nombre + '</h3>' + rrScoreBadge(z) + '</div>' +
                     '<p class="shoe-subhead">' + (z.subhead || z.terreno || '') + '</p>' +
                     '<div class="shoe-tags">' + (z.tags||[]).map(function(t){return '<span>'+t+'</span>';}).join('') + '</div>' +
                     '<p class="shoe-copy">' + (z.copy || '') + '</p>' +
@@ -376,9 +421,12 @@ if (!data) {
                         '<div class="metric-row"><span class="metric-label">Agarre</span><span class="metric-dots">' + dots(m.agarre) + '</span></div>' +
                         '<div class="metric-row"><span class="metric-label">Estabilidad</span><span class="metric-dots">' + dots(m.estabilidad) + '</span></div>' +
                     '</div>' : '') +
+                    rrSpecs(z) +
+                    rrProsCons(z) +
                     '<div class="shoe-price-row"><span class="shoe-price">' + fmt(z.precioNum) + '</span>' +
                     (function(){var u=z.linkMarca||z.linkDecathlon||z.link;var lb=z.linkMarca?('Comprar en '+(z.labelMarca||'Tienda oficial')):z.linkDecathlon?'Comprar en Decathlon':'Ver en Amazon MX';return u?'<a class="buy-btn" href="'+u+'" target="_blank" rel="noopener" data-zapato="'+z.nombre+'">'+lb+'</a>':'';}()) +
-                    '</div>';
+                    '</div>' +
+                    rrSource(z);
 
                 // Track click en tienda desde exploración
                 var buyBtn = card.querySelector('.buy-btn');
