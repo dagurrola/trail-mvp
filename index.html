@@ -622,8 +622,26 @@ function recomendar(){
     return [...base].sort((a,b)=>b.metricas.agarre-a.metricas.agarre||b.precioNum-a.precioNum)[0];
   }
 
-  // Pool por bucket
-  let pool=catalogo.filter(z=>z.bucket.includes(bucket));
+  // Pool por bucket (terreno)
+  const poolBucket=catalogo.filter(z=>z.bucket.includes(bucket));
+
+  // REGLA 1b: nivel y objetivo deben pesar en la seleccion — antes se pedian y se ignoraban
+  // (causaba recomendar zapatos de "entrenamiento urbano" cuando el usuario pedia "mejorar tecnica")
+  // Orden de relajacion: el OBJETIVO es la señal mas fuerte (el "para qué" del zapato) —
+  // se relaja el nivel primero, nunca el objetivo, salvo que ni terreno+objetivo alcancen.
+  let pool=poolBucket.filter(z=>(z.nivelKeys||[]).includes(nivel) && (z.objetivoKeys||[]).includes(objetivo));
+  if(pool.length<3){
+    // Relajar nivel: mantener el objetivo intacto
+    pool=poolBucket.filter(z=>(z.objetivoKeys||[]).includes(objetivo));
+  }
+  if(pool.length<3){
+    // Relajar objetivo: mantener al menos el nivel
+    pool=poolBucket.filter(z=>(z.nivelKeys||[]).includes(nivel));
+  }
+  if(pool.length<3){
+    // Relajar del todo: terreno solo (comportamiento previo al fix)
+    pool=poolBucket;
+  }
 
   // Si el bucket principal no tiene opciones en presupuesto, agregar en-presupuesto de cualquier bucket
   const inBudgetFromBucket=pool.filter(z=>z.precioNum<=maxMXN);
