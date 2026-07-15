@@ -38,11 +38,12 @@ h1{font-size:1.25rem;font-weight:700;margin-bottom:8px}
 /* RunRepeat data */
 .rr-scorebadge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;background:#14532d;color:#fff;font-size:.72rem;font-weight:700}
 .rr-scorebadge small{font-weight:500;opacity:.8;font-size:.62rem}
-.rr-specs{display:flex;flex-wrap:wrap;gap:6px;padding-top:10px;border-top:1px solid #f0f0f0}
+.rr-section-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#9ca3af;margin:12px 0 6px;padding-top:10px;border-top:1px solid #f0f0f0}
+.rr-specs{display:flex;flex-wrap:wrap;gap:6px}
 .rr-spec{display:flex;flex-direction:column;padding:5px 10px;border-radius:8px;background:#f6f7f6;min-width:62px}
 .rr-spec b{font-size:.82rem;font-weight:700;color:#14532d;line-height:1.1}
 .rr-spec span{font-size:.6rem;color:#6b7280;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
-.rr-proscons{display:grid;gap:5px;padding-top:10px}
+.rr-proscons{display:grid;gap:5px}
 .rr-pc-line{display:flex;gap:7px;font-size:.76rem;line-height:1.4;color:#374151}
 .rr-pc-line .ic{flex-shrink:0;font-weight:700}
 .rr-pc-line.pro .ic{color:#14532d}
@@ -51,6 +52,11 @@ h1{font-size:1.25rem;font-weight:700;margin-bottom:8px}
 .rr-source.pendiente{color:#b45309}
 .rr-titlerow{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .rr-titlerow h3{flex:1}
+.rr-match{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:.75rem;color:#14532d;background:#f0fdf4;border:1px solid #dcfce7;border-radius:8px;padding:7px 10px;margin:2px 0}
+.rr-match.alt{color:#854d0e;background:#fef9c3;border-color:#fde68a}
+.rr-match-lbl{font-weight:700}
+.rr-chip{background:#14532d;color:#fff;padding:1px 8px;border-radius:999px;font-weight:600;font-size:.7rem}
+.rr-match.alt .rr-chip{background:#854d0e}
 
 .shoe-price-row{display:flex;align-items:center;gap:10px;padding-top:8px}.shoe-price-row .shoe-price{flex-shrink:0}
 .shoe-price{font-size:1rem;font-weight:700}
@@ -143,20 +149,62 @@ if (!data) {
         if (!z.peso_g && !z.drop_rr && !z.stack_heel) return '';
         const items = [];
         if (z.peso_g) items.push(`<div class="rr-spec"><b>${z.peso_g}g</b><span>Peso</span></div>`);
-        if (z.stack_heel) items.push(`<div class="rr-spec"><b>${z.stack_heel}mm</b><span>Stack</span></div>`);
-        if (z.drop_rr !== undefined && z.drop_rr !== null) items.push(`<div class="rr-spec"><b>${z.drop_rr}mm</b><span>Drop</span></div>`);
-        return items.length ? `<div class="rr-specs">${items.join('')}</div>` : '';
+        if (z.stack_heel) items.push(`<div class="rr-spec"><b>${z.stack_heel}mm</b><span>Altura de suela</span></div>`);
+        if (z.drop_rr !== undefined && z.drop_rr !== null) items.push(`<div class="rr-spec"><b>${z.drop_rr}mm</b><span>Desnivel talón-punta</span></div>`);
+        return `<p class="rr-section-lbl">Ficha técnica</p><div class="rr-specs">${items.join('')}</div>`;
     }
     function rrProsCons(z) {
         const rows = [];
         if (z.pros && z.pros.length) z.pros.slice(0,3).forEach(p => rows.push(`<div class="rr-pc-line pro"><span class="ic">✓</span><span>${p}</span></div>`));
         if (z.contras && z.contras.length) z.contras.slice(0,3).forEach(c => rows.push(`<div class="rr-pc-line con"><span class="ic">✕</span><span>${c}</span></div>`));
-        return rows.length ? `<div class="rr-proscons">${rows.join('')}</div>` : '';
+        if (!rows.length) return '';
+        return `<p class="rr-section-lbl">Fortalezas y debilidades</p><div class="rr-proscons">${rows.join('')}</div>`;
     }
     function rrSource(z) {
         if (z.review_source === 'RunRepeat') return `<div class="rr-source">Datos verificados · RunRepeat</div>`;
         if (z.review_source === 'pendiente') return `<div class="rr-source pendiente">Datos técnicos pendientes de verificar</div>`;
         return '';
+    }
+    // Linea dinamica "por que te queda": generada del match real contra lo que el usuario pidio.
+    // Reemplaza el rol del subhead estatico como fuente de contexto — el subhead describe el zapato,
+    // esta linea explica por que encaja CONTIGO. Determinista, sin LLM.
+    const nivelLabel = { principiante:'Nivel principiante', intermedio:'Nivel intermedio', avanzado:'Nivel avanzado' };
+    function matchReason(z) {
+        const matchTerreno = z.terrenoKeys && z.terrenoKeys.includes(data.terreno);
+        const matchObjetivo = z.objetivoKeys && z.objetivoKeys.includes(data.objetivo);
+        const matchNivel = z.nivelKeys && z.nivelKeys.includes(data.nivel);
+        const chips = [];
+        if (matchTerreno) chips.push(terrenoLabel[data.terreno] || data.terreno);
+        if (matchObjetivo) chips.push(objLabel[data.objetivo] || data.objetivo);
+        if (matchNivel) chips.push(nivelLabel[data.nivel] || data.nivel);
+        if (!chips.length) return '<p class="rr-match alt"><span class="rr-match-lbl">Alternativa</span> dentro de tu presupuesto</p>';
+        const lbl = matchTerreno ? 'Coincide con' : 'Encaja con';
+        return '<p class="rr-match"><span class="rr-match-lbl">' + lbl + ':</span>' +
+               chips.map(ch => '<span class="rr-chip">' + ch + '</span>').join('') + '</p>';
+    }
+
+    // ESTRUCTURA canonica del subhead — generada al render desde atributos objetivos del zapato.
+    // Fuente unica de verdad: cualquier zapato (actual o futuro que agregue ECHO) obtiene un subhead
+    // consistente y sin asumir persona, POR CONSTRUCCION. No se lee el campo z.subhead almacenado.
+    // Decision Daniel (twin P003, 2026-07-14): mecanismo determinista que se mantiene solo, no guia editorial.
+    const ROL_FRASE = {
+        ligero:'El más ligero', 'protección':'El de mayor protección', 'transición':'El puente ideal',
+        versátil:'El más versátil', agarre:'El de mayor agarre', 'técnico':'El más técnico',
+        confort:'El más cómodo', velocidad:'El más veloz', ultra:'El especialista en ultra distancia',
+        competencia:'El de competencia', estabilidad:'El más estable', equilibrado:'El más equilibrado'
+    };
+    const BUCKET_LABEL = {
+        technical_trail:'terreno técnico', mixed_trail:'sendero mixto',
+        door_to_trail:'transición ciudad-trail', mud_soft_ground:'barro y terreno suelto'
+    };
+    function subheadCanonico(z) {
+        const frase = ROL_FRASE[z.rol] || 'La opción';
+        const bucket0 = (z.bucket && z.bucket[0]) || '';
+        const terreno = BUCKET_LABEL[bucket0] || bucket0 || 'trail';
+        const dist = (z.distancia || '').toLowerCase();
+        let out = frase + ' de ' + z.marca + ' para ' + terreno;
+        if (dist) out += ', distancias ' + dist;
+        return out + '.';
     }
 
     function renderCard(z, i) {
@@ -196,7 +244,8 @@ if (!data) {
         <article class="shoe-card${featured ? ' featured' : ''}">
             ${badge}
             <div class="rr-titlerow"><h3>${z.nombre}</h3>${rrScoreBadge(z)}</div>
-            <p class="shoe-subhead">${z.subhead || z.mejorPara || z.terreno || 'Trail'}</p>
+            ${matchReason(z)}
+            <p class="shoe-subhead">${subheadCanonico(z)}</p>
             <div class="shoe-tags">${tagList}</div>
             <p class="shoe-copy">${z.copy || z.descripcion}</p>
             ${z.highlight ? `<p class="shoe-highlight">${z.highlight}</p>` : ''}
@@ -306,7 +355,7 @@ if (!data) {
         data.zapatos.forEach(function(z, i) {
             var rol = i === 0 ? 'Mejor para ti' : (rolLabels[z.rol] || 'Alternativa');
             lines.push('*' + (i+1) + '. ' + z.nombre + ' \u2014 ' + rol + '*');
-            if (z.subhead) lines.push(z.subhead);
+            lines.push(subheadCanonico(z));
             lines.push(z.precio);
             if (z.link) lines.push('\u{1F517} ' + z.link);
             lines.push('');
@@ -413,7 +462,7 @@ if (!data) {
                 card.className = 'shoe-card' + (isTop ? '' : '');
                 card.innerHTML = topBadge +
                     '<div class="rr-titlerow"><h3>' + z.nombre + '</h3>' + rrScoreBadge(z) + '</div>' +
-                    '<p class="shoe-subhead">' + (z.subhead || z.terreno || '') + '</p>' +
+                    '<p class="shoe-subhead">' + subheadCanonico(z) + '</p>' +
                     '<div class="shoe-tags">' + (z.tags||[]).map(function(t){return '<span>'+t+'</span>';}).join('') + '</div>' +
                     '<p class="shoe-copy">' + (z.copy || '') + '</p>' +
                     (m ? '<div class="shoe-metrics">' +
