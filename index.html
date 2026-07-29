@@ -55,6 +55,34 @@ ul{margin:0;padding-left:20px}
 
 <select id="objectiveSub" class="hidden" required></select>
 
+<select id="humedad" class="hidden">
+<option value="">Seleccionar</option>
+<option value="seco">Seco</option>
+<option value="humedo">Húmedo / con barro</option>
+<option value="ambos">Ambos</option>
+</select>
+
+<details style="margin:6px 0 15px">
+<summary style="cursor:pointer;font-weight:bold;color:#28a745;font-size:.9rem">Preferencias avanzadas (opcional)</summary>
+<div style="padding-top:10px">
+<label for="pisada">¿Cómo es tu pisada?</label>
+<select id="pisada">
+<option value="">No sé / prefiero no decir</option>
+<option value="neutral">Neutral</option>
+<option value="pronador">Pronador</option>
+<option value="supinador">Supinador</option>
+</select>
+<label for="prioridad">¿Qué te importa más en un tenis?</label>
+<select id="prioridad">
+<option value="">Sin preferencia</option>
+<option value="ligereza">Ligereza</option>
+<option value="agarre">Agarre / tracción</option>
+<option value="amortiguacion">Amortiguación / protección</option>
+<option value="estabilidad">Estabilidad</option>
+</select>
+</div>
+</details>
+
 <button type="button" onclick="recomendar()">Ver recomendación</button>
 </form>
 </div>
@@ -64,6 +92,10 @@ const sub=document.getElementById('objectiveSub');sub.innerHTML='';sub.classList
 if(this.value==='entrenamiento'){sub.innerHTML='<option value="">Seleccionar</option>'+'<option value="tecnica">Mejorar técnica</option>'+'<option value="distancia">Aumentar distancia</option>'+'<option value="velocidad">Velocidad</option>';sub.classList.remove('hidden');sub.setAttribute('required','');}
 if(this.value==='competencia'){sub.innerHTML='<option value="">Seleccionar</option>'+'<option value="5K">5 K</option>'+'<option value="10K">10 K</option>'+'<option value="21K">21 K</option>'+'<option value="51Kplus">51 K+</option>';sub.classList.remove('hidden');sub.setAttribute('required','');}
 });
+document.getElementById('terrain').addEventListener('change', function(){
+const hum=document.getElementById('humedad');
+if(this.value){hum.classList.remove('hidden');} else {hum.classList.add('hidden');hum.value='';}
+});
 function recomendar(){
   const terreno=document.getElementById('terrain').value;
   const presupuesto=document.getElementById('budget').value;
@@ -71,6 +103,9 @@ function recomendar(){
   const objMaj=document.getElementById('objective').value;
   const objSub=document.getElementById('objectiveSub').value;
   let objetivo=objSub||objMaj;
+  const humedad=document.getElementById('humedad').value;
+  const pisada=document.getElementById('pisada').value;
+  const prioridad=document.getElementById('prioridad').value;
   if(!nivel||!terreno||!presupuesto||!objetivo){alert('Por favor completa todos los campos.');return}
 
   // REGLA 1: Terrain buckets
@@ -81,6 +116,13 @@ function recomendar(){
     mixto:'mixed_trail'
   };
   const bucket=terrainBucket[terreno]||'mixed_trail';
+
+  // REGLA 1c: humedad expande el pool a mud_soft_ground — antes ese bucket
+  // no tenia puerta de entrada en el wizard aunque el catalogo si lo tuviera.
+  const bucketsObjetivo=[bucket];
+  if((humedad==='humedo'||humedad==='ambos') && bucket!=='mud_soft_ground'){
+    bucketsObjetivo.push('mud_soft_ground');
+  }
 
   // Budget
   const maxMXN={'menos2000':1999,'2000-4000':4000,'mas4000':99999}[presupuesto]||4000;
@@ -594,12 +636,27 @@ function recomendar(){
   ];
 
   // REGLA 6: Pickers explícitos por rol
-  function pickRecommended(pool){
+  // REGLA 1d: preferencias avanzadas opcionales (pisada, prioridad) suman un
+  // boost al score del pick recomendado — aditivo, si el usuario no elige
+  // nada esto devuelve 0 y el comportamiento queda identico al de antes.
+  function preferenciaScore(z, pisada, prioridad){
+    let score=0;
+    if(pisada==='pronador') score += (z.metricas.estabilidad||0)*2;
+    if(pisada==='supinador') score += (z.metricas.amortiguacion||0)*2;
+    if(prioridad==='ligereza' && z.peso_g) score += Math.max(0,(350-z.peso_g))/20;
+    if(prioridad==='agarre') score += (z.metricas.agarre||0)*2;
+    if(prioridad==='amortiguacion') score += (z.metricas.amortiguacion||0)*2;
+    if(prioridad==='estabilidad') score += (z.metricas.estabilidad||0)*2;
+    return score;
+  }
+
+  function pickRecommended(pool, pisada, prioridad){
     const inBudget=pool.filter(z=>z.precioNum<=maxMXN);
     if(inBudget.length>=1){
       // Dentro del presupuesto: mejor score, desempate por precio (más caro = más especializado)
       return [...inBudget].sort((a,b)=>
-        (b.metricas.agarre+b.metricas.estabilidad)-(a.metricas.agarre+a.metricas.estabilidad)
+        ((b.metricas.agarre+b.metricas.estabilidad)+preferenciaScore(b,pisada,prioridad))
+        -((a.metricas.agarre+a.metricas.estabilidad)+preferenciaScore(a,pisada,prioridad))
         || b.precioNum-a.precioNum
       )[0];
     } else {
@@ -622,8 +679,8 @@ function recomendar(){
     return [...base].sort((a,b)=>b.metricas.agarre-a.metricas.agarre||b.precioNum-a.precioNum)[0];
   }
 
-  // Pool por bucket (terreno)
-  const poolBucket=catalogo.filter(z=>z.bucket.includes(bucket));
+  // Pool por bucket (terreno) — incluye mud_soft_ground si el usuario pidio humedad
+  const poolBucket=catalogo.filter(z=>z.bucket.some(b=>bucketsObjetivo.includes(b)));
 
   // REGLA 1b: nivel y objetivo deben pesar en la seleccion — antes se pedian y se ignoraban
   // (causaba recomendar zapatos de "entrenamiento urbano" cuando el usuario pedia "mejorar tecnica")
@@ -656,7 +713,7 @@ function recomendar(){
     pool=[...pool,...extras];
   }
 
-  const rec=pickRecommended(pool);
+  const rec=pickRecommended(pool, pisada, prioridad);
   const comfort=pickComfort(pool,[rec?.nombre].filter(Boolean));
   const traction=pickTraction(pool,[rec?.nombre,comfort?.nombre].filter(Boolean));
 
