@@ -639,7 +639,7 @@ function recomendar(){
   // REGLA 1d: preferencias avanzadas opcionales (pisada, prioridad) suman un
   // boost al score del pick recomendado — aditivo, si el usuario no elige
   // nada esto devuelve 0 y el comportamiento queda identico al de antes.
-  function preferenciaScore(z, pisada, prioridad){
+  function preferenciaScore(z, pisada, prioridad, terreno){
     let score=0;
     if(pisada==='pronador') score += (z.metricas.estabilidad||0)*2;
     if(pisada==='supinador') score += (z.metricas.amortiguacion||0)*2;
@@ -647,16 +647,20 @@ function recomendar(){
     if(prioridad==='agarre') score += (z.metricas.agarre||0)*2;
     if(prioridad==='amortiguacion') score += (z.metricas.amortiguacion||0)*2;
     if(prioridad==='estabilidad') score += (z.metricas.estabilidad||0)*2;
+    // REGLA 1e: terreno especifico (roca vs montaña, bosque vs mixto) desempata
+    // dentro del bucket colapsado — antes elegir 'roca' o 'montaña' daba
+    // exactamente el mismo resultado porque ambos mapean a technical_trail.
+    if(terreno && (z.terrenoKeys||[]).includes(terreno)) score += 3;
     return score;
   }
 
-  function pickRecommended(pool, pisada, prioridad){
+  function pickRecommended(pool, pisada, prioridad, terreno){
     const inBudget=pool.filter(z=>z.precioNum<=maxMXN);
     if(inBudget.length>=1){
       // Dentro del presupuesto: mejor score, desempate por precio (más caro = más especializado)
       return [...inBudget].sort((a,b)=>
-        ((b.metricas.agarre+b.metricas.estabilidad)+preferenciaScore(b,pisada,prioridad))
-        -((a.metricas.agarre+a.metricas.estabilidad)+preferenciaScore(a,pisada,prioridad))
+        ((b.metricas.agarre+b.metricas.estabilidad)+preferenciaScore(b,pisada,prioridad,terreno))
+        -((a.metricas.agarre+a.metricas.estabilidad)+preferenciaScore(a,pisada,prioridad,terreno))
         || b.precioNum-a.precioNum
       )[0];
     } else {
@@ -713,7 +717,7 @@ function recomendar(){
     pool=[...pool,...extras];
   }
 
-  const rec=pickRecommended(pool, pisada, prioridad);
+  const rec=pickRecommended(pool, pisada, prioridad, terreno);
   const comfort=pickComfort(pool,[rec?.nombre].filter(Boolean));
   const traction=pickTraction(pool,[rec?.nombre,comfort?.nombre].filter(Boolean));
 
