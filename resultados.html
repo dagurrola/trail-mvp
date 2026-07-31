@@ -40,8 +40,6 @@ h1{font-size:1.25rem;font-weight:700;margin-bottom:8px;color:var(--text)}
 .metric-dots{font-size:.85rem;letter-spacing:1px;color:var(--accent)}
 
 /* RunRepeat data */
-.rr-scorebadge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;background:var(--accent);color:#0f1210;font-size:.72rem;font-weight:700}
-.rr-scorebadge small{font-weight:500;opacity:.8;font-size:.62rem}
 .rr-section-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);margin:12px 0 6px;padding-top:10px;border-top:1px solid var(--border)}
 .rr-specs{display:flex;flex-wrap:wrap;gap:6px}
 .rr-spec{display:flex;flex-direction:column;padding:5px 10px;border-radius:8px;background:#0d100e;min-width:62px}
@@ -145,10 +143,11 @@ if (!data) {
     }
 
     // Helpers RunRepeat (compartidos entre cards recomendadas y exploración)
-    function rrScoreBadge(z) {
-        if (!z.score_rr) return '';
-        return `<span class="rr-scorebadge" title="Puntuación RunRepeat">${z.score_rr}<small>/100</small></span>`;
-    }
+    // Nota: el score_rr (0-100) del catálogo NO se muestra — solo 44/55 zapatos
+    // lo tienen (RunRepeat no publica review de laboratorio para todos los
+    // modelos), y mostrarlo en unos sí y otros no leía como inconsistencia,
+    // no como transparencia (decisión Daniel 2026-07-31). review_source
+    // (rrSource, abajo) sigue declarando la fuente de los demás datos técnicos.
     function rrSpecs(z) {
         if (!z.peso_g && !z.drop_rr && !z.stack_heel) return '';
         const items = [];
@@ -247,7 +246,7 @@ if (!data) {
         return `
         <article class="shoe-card${featured ? ' featured' : ''}">
             ${badge}
-            <div class="rr-titlerow"><h3>${z.nombre}</h3>${rrScoreBadge(z)}</div>
+            <div class="rr-titlerow"><h3>${z.nombre}</h3></div>
             ${matchReason(z)}
             <p class="shoe-subhead">${subheadCanonico(z)}</p>
             <div class="shoe-tags">${tagList}</div>
@@ -465,7 +464,7 @@ if (!data) {
                 var card = document.createElement('article');
                 card.className = 'shoe-card' + (isTop ? '' : '');
                 card.innerHTML = topBadge +
-                    '<div class="rr-titlerow"><h3>' + z.nombre + '</h3>' + rrScoreBadge(z) + '</div>' +
+                    '<div class="rr-titlerow"><h3>' + z.nombre + '</h3></div>' +
                     '<p class="shoe-subhead">' + subheadCanonico(z) + '</p>' +
                     '<div class="shoe-tags">' + (z.tags||[]).map(function(t){return '<span>'+t+'</span>';}).join('') + '</div>' +
                     '<p class="shoe-copy">' + (z.copy || '') + '</p>' +
